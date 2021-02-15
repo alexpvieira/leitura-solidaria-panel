@@ -1,0 +1,22 @@
+export default {
+    back: "Back",
+    email: "Email",
+    password: "Password",
+    recover_password: "Recover password",
+    sign_in: "Sign in",
+    submit: "Submit",
+	solidary_reading: "Solidary Reading",
+    created_by_the_b_group_for_the_software_engeneering_mba: "Created by the B Group for the Software Engeneering MBA",
+    home: "Home",
+    sign_out: "Sign out",
+    users: "Users",
+    ngos: "NGOs",
+    partners: "Partners",
+    news: "News",
+    news_published: "News published",
+    news_read: "News read",
+    money_raised: "Money raised",
+    users_active: "Users active",
+    assisted_ngos: "Assisted NGOs",
+    partners: "Partners"
+}
