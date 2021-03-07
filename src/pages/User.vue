@@ -67,8 +67,10 @@ export default {
     created() {
         if (this.$route.params.id !== 0) {
             let user = users_list.find(e => e.id === this.$route.params.id)
-            console.log(user)
-            if (user) this.user = user
+            if (user) {
+                this.user = Object.assign({}, user)
+                this.user.profile = this.profiles.find(e => e.value === user.profile)
+            } 
         }
     }
 }
