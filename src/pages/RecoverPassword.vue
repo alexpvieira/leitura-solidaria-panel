@@ -13,7 +13,7 @@
                         </div>
 
                         <div class="col-12">
-                            <q-btn class="full-width" color="primary" :label="$t('submit')" />
+                            <q-btn no-caps class="full-width" color="primary" :label="$t('submit')" />
                         </div>
 
                         <div class="col-12 q-mt-md text-center text-caption">

@@ -17,11 +17,11 @@
                         </div>
 
                         <div class="col-12">
-                            <q-btn class="full-width" color="primary" :label="$t('sign_in')" @click="$router.push({ name: 'home' })" />
+                            <q-btn no-caps class="full-width" color="primary" :label="$t('sign_in')" @click="$router.push({ name: 'home' })" />
                         </div>
 
                         <div class="col-12 text-center text-caption">
-                            <q-btn flat dense no-caps color="primary" :label="$t('recover_password')" @click="$router.push({ name: 'recover-password' })" />
+                            <q-btn no-caps flat dense no-caps color="primary" :label="$t('recover_password')" @click="$router.push({ name: 'recover-password' })" />
                         </div>
                     </div>
                 </q-form>

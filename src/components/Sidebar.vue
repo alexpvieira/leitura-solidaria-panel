@@ -8,7 +8,7 @@
 
         <q-scroll-area :style="$q.platform.is.mobile ? 'height: calc(100% - 70px);' : 'height:100%;'">
             <q-list padding separator class="text-blue-grey-8">
-                <q-item clickable v-ripple :to="{ name: menu_item.to }" exact v-for="(menu_item, index) in menu_items" :key="index">
+                <q-item clickable v-ripple :to="{ name: menu_item.to }" v-for="(menu_item, index) in menu_items" :key="index">
                     <q-item-section avatar>
                         <q-icon :name="menu_item.icon" />
                     </q-item-section>
@@ -100,6 +100,10 @@ export default {
 
     methods: {
         changeLanguage(language) {
+            import('quasar/lang/' + language)
+            .then(lang => {
+                this.$q.lang.set(lang.default)
+            })
 			this.$i18n.locale = language
         },
         
@@ -107,6 +111,10 @@ export default {
             this.$store.dispatch('common/SET_DRAWER_STATE', [false])
             this.$router.push({ name: 'login' })
         }
+    },
+
+    created() {
+        this.changeLanguage('pt-br')
     }
 }
 </script>

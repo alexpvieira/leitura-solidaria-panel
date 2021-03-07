@@ -30,6 +30,11 @@ const routes = [
 				component: () => import('pages/Users.vue') 
 			},
 			{ 
+				path: 'users/:id', 
+				name: 'user', 
+				component: () => import('pages/User.vue') 
+			},
+			{ 
 				path: 'ngos', 
 				name: 'ngos', 
 				component: () => import('pages/Ngos.vue') 
