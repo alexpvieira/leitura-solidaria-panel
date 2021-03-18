@@ -40,9 +40,19 @@ const routes = [
 				component: () => import('pages/Ngos.vue') 
 			},
 			{ 
+				path: 'ngos/:id', 
+				name: 'ngo', 
+				component: () => import('pages/Ngo.vue') 
+			},
+			{ 
 				path: 'partners', 
 				name: 'partners', 
 				component: () => import('pages/Partners.vue') 
+			},
+			{ 
+				path: 'partners/:id', 
+				name: 'partner', 
+				component: () => import('pages/Partner.vue') 
 			},
 			{ 
 				path: 'news', 

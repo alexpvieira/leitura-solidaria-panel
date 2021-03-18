@@ -27,12 +27,16 @@
                 </q-select>
             </div>
 
-            <div class="col-xs-12 col-sm-3">
-                <q-btn dense no-caps color="negative" :label="$t('cancel')" @click="$router.push({ name: 'users' })" class="full-width" />
-            </div>
+            <div class="col-12 q-mt-md">
+                <div class="row q-col-gutter-sm justify-end">
+                    <div class="col-xs-12 col-sm-3" :class="$q.platform.is.mobile ? 'order-last' : ''">
+                        <q-btn dense no-caps color="negative" :label="$t('cancel')" @click="$router.push({ name: 'users' })" class="full-width" />
+                    </div>
 
-            <div class="col-xs-12 col-sm-3">
-                <q-btn dense no-caps color="positive" :label="$t('save')" @click="$router.push({ name: 'users' })" class="full-width" />
+                    <div class="col-xs-12 col-sm-3">
+                        <q-btn dense no-caps color="positive" :label="$t('save')" @click="saveUser()" class="full-width" />
+                    </div>
+                </div>
             </div>
         </q-form>
     </q-page>
@@ -61,6 +65,18 @@ export default {
                 name: '',
                 profile: ''
             }
+        }
+    },
+
+    methods: {
+        saveUser() {
+            this.$q.notify({
+                message:this.$route.params.id === 0 ? this.$t('user_created_successfully') : this.$t('user_updated_successfully'),
+                type: 'positive',
+                icon: 'fal fa-save'
+            })
+
+            this.$router.push({ name: 'users' })
         }
     },
 

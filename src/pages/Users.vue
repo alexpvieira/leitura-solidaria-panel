@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <q-table :title="$t('users')" :data="users" :columns="columns" :pagination="pagination" row-key="name" :grid="$q.platform.is.mobile">
+        <q-table :title="$t('users')" :data="users" :columns="columns" :pagination="pagination" row-key="name" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
             <template v-slot:top-right>
                 <q-btn no-caps dense color="primary" :label="$t('new_user')" @click="$router.push({ name: 'user', params: { id: 0 } })" />
             </template>
@@ -21,8 +21,17 @@
 
             <template v-slot:body-cell-actions="props">
                 <q-td auto-width :props="props">
-                    <q-btn flat round dense icon="fal fa-trash-alt" color="negative" @click="confirmRemove(props.value)" />
-                    <q-btn flat round dense icon="fal fa-edit" color="secondary" @click="$router.push({ name: 'user', params: { id: props.value } })" />
+                    <q-btn flat round dense icon="fal fa-trash-alt" color="negative" @click="confirmRemove(props.value)">
+                        <q-tooltip>
+                            {{ $t('remove') }}
+                        </q-tooltip>
+                    </q-btn>
+
+                    <q-btn flat round dense icon="fal fa-edit" color="secondary" @click="$router.push({ name: 'user', params: { id: props.value } })">
+                        <q-tooltip>
+                            {{ $t('edit') }}
+                        </q-tooltip>
+                    </q-btn>
                 </q-td>
             </template>
 
@@ -51,12 +60,12 @@
 
                         <q-item v-for="col in props.cols.filter(col => col.name === 'actions')" :key="col.name">
                             <q-item-section>
-                                <div class="row q-col-gutter-sm">
-                                    <div class="col-6">
+                                <div class="row q-col-gutter-sm justify-center">
+                                    <div class="col-4">
                                         <q-btn no-caps dense icon="fal fa-trash-alt" color="negative" class="full-width" :label="$t('remove')" @click="confirmRemove(col.value)" />
                                     </div>
 
-                                    <div class="col-6">
+                                    <div class="col-4">
                                         <q-btn no-caps dense icon="fal fa-edit" color="secondary" class="full-width" :label="$t('edit')" @click="$router.push({ name: 'user', params: { id: col.value } })" />
                                     </div>
                                 </div>
@@ -77,8 +86,8 @@
                 </q-card-section>
 
                 <q-card-actions align="right">
-                    <q-btn no-caps :label="$t('remove')" color="negative" @click="userRemovedConfirmation()" />
                     <q-btn no-caps :label="$t('cancel')" color="positive" v-close-popup />
+                    <q-btn no-caps :label="$t('remove')" color="negative" @click="userRemovedConfirmation()" />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -121,7 +130,7 @@ export default {
             pagination: {
                 descending: false,
                 page: 1,
-                rowsPerPage: 5,
+                rowsPerPage: 10,
                 sortBy: 'desc'
             },
             selected_user: {},

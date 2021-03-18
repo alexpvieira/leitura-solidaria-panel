@@ -1,72 +1,72 @@
 [
     {
+        "actions": 1,
         "email": "xpetrozzi0@indiatimes.com",
         "id": 1,
         "name": "Xavier Petrozzi",
-        "profile": "user",
-        "actions": 1
+        "profile": "user"
     },
     {
+        "actions": 2,
         "email": "stresler1@ifeng.com",
         "id": 2,
         "name": "Stevena Tresler",
-        "profile": "user",
-        "actions": 2
+        "profile": "user"
     },
     {
+        "actions": 3,
         "email": "tbetjeman2@nih.gov",
         "id": 3,
         "name": "Tina Betjeman",
-        "profile": "partner",
-        "actions": 3
+        "profile": "partner"
     },
     {
+        "actions": 4,
         "email": "rpearse3@yellowbook.com",
         "id": 4,
         "name": "Ryley Pearse",
-        "profile": "partner",
-        "actions": 4
+        "profile": "partner"
     },
     {
+        "actions": 5,
         "email": "lbehagg4@360.cn",
         "id": 5,
         "name": "Lemar Behagg",
-        "profile": "ngo",
-        "actions": 5
+        "profile": "ngo"
     },
     {
+        "actions": 6,
         "email": "glehr5@imdb.com",
         "id": 6,
         "name": "Grannie Lehr",
-        "profile": "ngo",
-        "actions": 6
+        "profile": "ngo"
     },
     {
+        "actions": 7,
         "email": "dfairbank6@dell.com",
         "id": 7,
         "name": "Dorie Fairbank",
-        "profile": "user",
-        "actions": 7
+        "profile": "user"
     },
     {
+        "actions": 8,
         "email": "mbelson7@imdb.com",
         "id": 8,
         "name": "Mirna Belson",
-        "profile": "user",
-        "actions": 8
+        "profile": "user"
     },
     {
+        "actions": 9,
         "email": "obothe8@who.int",
         "id": 9,
         "name": "Othella Bothe",
-        "profile": "user",
-        "actions": 9
+        "profile": "user"
     },
     {
+        "actions": 10,
         "email": "ldignall9@zdnet.com",
         "id": 10,
         "name": "Laurena Dignall",
-        "profile": "user",
-        "actions": 10
+        "profile": "user"
     }
 ]
