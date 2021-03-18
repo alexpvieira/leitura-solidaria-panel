@@ -20,11 +20,19 @@
                     <template v-slot:option="scope">
                         <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                             <q-item-section>
-                                <q-item-label caption>{{ $t(scope.opt.label) }}</q-item-label>
+                                <q-item-label>{{ $t(scope.opt.label) }}</q-item-label>
                             </q-item-section>
                         </q-item>
                     </template>
                 </q-select>
+            </div>
+
+             <div class="col-12" v-if="user.profile.value === 2">
+                <q-select outlined dense bg-color="white" v-model="user.ngo" :options="ngos" :label="$t('ngo')" />
+            </div>
+
+            <div class="col-12" v-if="user.profile.value === 3">
+                <q-select outlined dense bg-color="white" v-model="user.partner" :options="partners" :label="$t('partner')" />
             </div>
 
             <div class="col-12 q-mt-md">
@@ -44,27 +52,23 @@
 
 <script>
 import users_list from '../json/users.json'
+import profiles_list from '../json/profiles.json'
+import partners_list from '../json/partners.json'
+import ngos_list from '../json/ngos.json'
 
 export default {
     name: 'PageUser',
 
     data() {
         return {
-            profiles: [{
-                label: 'user',
-                value: 'user'
-            }, {
-                label: 'ngo',
-                value: 'ngo'
-            }, {
-                label: 'partner',
-                value: 'partner'
-            }],
+            profiles: profiles_list,
             user: {
                 email: '',
                 name: '',
-                profile: ''
-            }
+                profile: null
+            },
+            ngos: ngos_list.map(e => ({ label: e.name, value: e.id })),
+            partners: partners_list.map(e => ({ label: e.name, value: e.id }))
         }
     },
 
@@ -85,7 +89,6 @@ export default {
             let user = users_list.find(e => e.id === this.$route.params.id)
             if (user) {
                 this.user = Object.assign({}, user)
-                this.user.profile = this.profiles.find(e => e.value === user.profile)
             } 
         }
     }

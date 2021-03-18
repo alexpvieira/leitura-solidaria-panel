@@ -15,7 +15,7 @@
 
             <template v-slot:body-cell-profile="props">
                 <q-td :props="props">
-                    {{ $t(props.value) }}
+                    {{ $t(getProfile(props.value)) }}
                 </q-td>
             </template>
 
@@ -96,6 +96,7 @@
 
 <script>
 import users_list from '../json/users.json'
+import profiles_list from '../json/profiles.json'
 
 export default {
     name: 'PageUsers',
@@ -154,6 +155,10 @@ export default {
                 type: 'positive',
                 icon: 'fal fa-user'
             })
+        },
+
+        getProfile(profile_id) {
+            return profiles_list.find(e => e.value === profile_id.value)?.label
         }
     }
 }

@@ -4,69 +4,131 @@
         "email": "xpetrozzi0@indiatimes.com",
         "id": 1,
         "name": "Xavier Petrozzi",
-        "profile": "user"
+        "profile": {
+            "value": 1,
+            "label": "user"
+        },
+        "partner": null,
+        "ngo": null
     },
     {
         "actions": 2,
         "email": "stresler1@ifeng.com",
         "id": 2,
         "name": "Stevena Tresler",
-        "profile": "user"
+        "profile": {
+            "value": 1,
+            "label": "user"
+        },
+        "partner": null,
+        "ngo": null
     },
     {
         "actions": 3,
         "email": "tbetjeman2@nih.gov",
         "id": 3,
         "name": "Tina Betjeman",
-        "profile": "partner"
+        "profile": {
+            "value": 3,
+            "label": "partner"
+        },
+        "partner": {
+            "value": 1,
+            "label": "Bradtke, Moore and Cole"
+        },
+        "ngo": null
     },
     {
         "actions": 4,
         "email": "rpearse3@yellowbook.com",
         "id": 4,
         "name": "Ryley Pearse",
-        "profile": "partner"
+        "profile": {
+            "value": 3,
+            "label": "partner"
+        },
+        "partner": {
+            "value": 2,
+            "label": "Waters-Graham"
+        },
+        "ngo": null
     },
     {
         "actions": 5,
         "email": "lbehagg4@360.cn",
         "id": 5,
         "name": "Lemar Behagg",
-        "profile": "ngo"
+        "profile": {
+            "value": 2,
+            "label": "ngo"
+        },
+        "partner": null,
+        "ngo": {
+            "value": 1,
+            "label": "Bradtke, Moore and Cole"
+        }
     },
     {
         "actions": 6,
         "email": "glehr5@imdb.com",
         "id": 6,
         "name": "Grannie Lehr",
-        "profile": "ngo"
+        "profile": {
+            "value": 2,
+            "label": "ngo"
+        },
+        "partner": null,
+        "ngo": {
+            "value": 2,
+            "label": "Waters-Graham"
+        }
     },
     {
         "actions": 7,
         "email": "dfairbank6@dell.com",
         "id": 7,
         "name": "Dorie Fairbank",
-        "profile": "user"
+        "profile": {
+            "value": 1,
+            "label": "user"
+        },
+        "partner": null,
+        "ngo": null
     },
     {
         "actions": 8,
         "email": "mbelson7@imdb.com",
         "id": 8,
         "name": "Mirna Belson",
-        "profile": "user"
+        "profile": {
+            "value": 1,
+            "label": "user"
+        },
+        "partner": null,
+        "ngo": null
     },
     {
         "actions": 9,
         "email": "obothe8@who.int",
         "id": 9,
         "name": "Othella Bothe",
-        "profile": "user"
+        "profile": {
+            "value": 1,
+            "label": "user"
+        },
+        "partner": null,
+        "ngo": null
     },
     {
         "actions": 10,
         "email": "ldignall9@zdnet.com",
         "id": 10,
         "name": "Laurena Dignall",
-        "profile": "user"
+        "profile": {
+            "value": 1,
+            "label": "user"
+        },
+        "partner": null,
+        "ngo": null
     }
 ]

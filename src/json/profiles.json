@@ -1,0 +1,14 @@
+[
+    {
+        "label": "user",
+        "value": 1
+    },
+    {
+        "label": "ngo",
+        "value": 2
+    },
+    {
+        "label": "partner",
+        "value": 3
+    }
+]
