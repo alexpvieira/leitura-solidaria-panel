@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <q-table :title="$t('users')" :data="users" :columns="columns" :pagination="pagination" row-key="name" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
+        <q-table :title="$t('users')" :data="users" :columns="columns" :pagination="pagination" row-key="id" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
             <template v-slot:top-right>
                 <q-btn no-caps dense color="primary" :label="$t('new_user')" @click="$router.push({ name: 'user', params: { id: 0 } })" />
             </template>
@@ -11,6 +11,12 @@
                         {{ $t(col.label) }}
                     </q-th>
                 </q-tr>
+            </template>
+
+            <template v-slot:body-cell-id="props">
+                <q-td auto-width :props="props">
+                    {{ props.value }}
+                </q-td>
             </template>
 
             <template v-slot:body-cell-profile="props">
@@ -38,23 +44,17 @@
             <template v-slot:item="props">
                 <q-card class="full-width q-mb-md q-pt-md">
                     <q-list dense>
-                        <q-item v-for="col in props.cols.filter(col => col.name !== 'actions' && col.name !== 'profile')" :key="col.name">
+                        <q-item v-for="col in props.cols.filter(col => col.name !== 'actions' && col.name !== 'id')" :key="col.name">
                             <q-item-section>
                                 <q-item-label>{{ $t(col.label) }}</q-item-label>
                             </q-item-section>
 
-                            <q-item-section side>
+                            <q-item-label caption v-if="col.name === 'profile'">
+                                {{ $t(col.value.label) }}
+                            </q-item-label>
+
+                            <q-item-section side v-else>
                                 <q-item-label caption>{{ col.value }}</q-item-label>
-                            </q-item-section>
-                        </q-item>
-
-                        <q-item v-for="col in props.cols.filter(col => col.name === 'profile')" :key="col.name">
-                            <q-item-section>
-                                <q-item-label>{{ $t(col.label) }}</q-item-label>
-                            </q-item-section>
-
-                            <q-item-section side>
-                                <q-item-label caption>{{ $t(col.value) }}</q-item-label>
                             </q-item-section>
                         </q-item>
 
@@ -104,6 +104,12 @@ export default {
     data() {
         return {
             columns: [{
+                align: 'left',
+                field: 'id',
+                label: '',
+                name: 'id',
+                sortable: false
+            }, {
                 align: 'left',
                 field: 'name',
                 label: 'name',

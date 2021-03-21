@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <q-table :title="$t('ngos')" :data="ngos" :columns="columns" :pagination="pagination" row-key="name" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
+        <q-table :title="$t('ngos')" :data="ngos" :columns="columns" :pagination="pagination" row-key="id" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
             <template v-slot:top-right>
                 <q-btn no-caps dense color="primary" :label="$t('new_ngo')" @click="$router.push({ name: 'ngo', params: { id: 0 } })" />
             </template>
@@ -11,6 +11,12 @@
                         {{ $t(col.label) }}
                     </q-th>
                 </q-tr>
+            </template>
+
+            <template v-slot:body-cell-id="props">
+                <q-td auto-width :props="props">
+                    {{ props.value }}
+                </q-td>
             </template>
 
             <template v-slot:body-cell-profile="props">
@@ -38,7 +44,7 @@
             <template v-slot:item="props">
                 <q-card class="full-width q-mb-md q-pt-md">
                     <q-list dense>
-                        <q-item v-for="col in props.cols.filter(col => col.name !== 'actions')" :key="col.name">
+                        <q-item v-for="col in props.cols.filter(col => col.name !== 'actions' && col.name !== 'id')" :key="col.name">
                             <q-item-section>
                                 <q-item-label>{{ $t(col.label) }}</q-item-label>
                             </q-item-section>
@@ -94,6 +100,12 @@ export default {
         return {
             columns: [{
                 align: 'left',
+                field: 'id',
+                label: '',
+                name: 'id',
+                sortable: false
+            }, {
+                align: 'left',
                 field: 'name',
                 label: 'name',
                 name: 'name',
@@ -111,6 +123,7 @@ export default {
                 name: 'actions',
                 sortable: false
             }],
+            ngos: ngos_list,
             pagination: {
                 descending: false,
                 page: 1,
@@ -118,8 +131,7 @@ export default {
                 sortBy: 'desc'
             },
             selected_ngo: {},
-            show_confirm_remove: false,
-            ngos: ngos_list
+            show_confirm_remove: false
         }
     },
 

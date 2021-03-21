@@ -58,5 +58,12 @@ export default {
     user_updated_successfully: "User updated successfully",
     users: "Users",
     users_active: "Users active",
-    zip_code: "Zip code"
+    zip_code: "Zip code",
+    title: "Title",
+    points: "Points",
+    readings: "Reading",
+    publication_date: "Publication date",
+    new_news: "New news",
+    confirm_to_remove_the_news: "Confirm to remove the news",
+    news_removed_successfully: "News removed successfully"
 }

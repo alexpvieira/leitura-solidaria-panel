@@ -58,5 +58,12 @@ export default {
     user_updated_successfully: "Usuário atualizado com sucesso",
     users: "Usuários",
     users_active: "Usuários ativos",
-    zip_code: "CEP"
+    zip_code: "CEP",
+    title: "Título",
+    points: "Pontos",
+    readings: "Leituras",
+    publication_date: "Data de publicação",
+    new_news: "Nova notícia",
+    confirm_to_remove_the_news: "Confirma remover a notícia",
+    news_removed_successfully: "Notícia removida com sucesso"
 }
