@@ -65,7 +65,9 @@ export default {
             user: {
                 email: '',
                 name: '',
-                profile: null
+                profile: {
+                    
+                }
             },
             ngos: ngos_list.map(e => ({ label: e.name, value: e.id })),
             partners: partners_list.map(e => ({ label: e.name, value: e.id }))
