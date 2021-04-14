@@ -1,8 +1,8 @@
 <template>
     <q-page class="q-pa-md">
-        <q-table :title="$t('news')" :data="news" :columns="columns" :pagination="pagination" row-key="id" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
+        <q-table :title="$t('articles')" :data="articles" :columns="columns" :pagination="pagination" row-key="id" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
             <template v-slot:top-right>
-                <q-btn no-caps dense color="primary" :label="$t('new_news')" @click="$router.push({ name: 'new-news', params: { id: 0 } })" />
+                <q-btn no-caps dense color="primary" :label="$t('new_article')" @click="$router.push({ name: 'article', params: { id: 0 } })" />
             </template>
             
             <template v-slot:header="props">
@@ -39,7 +39,7 @@
                         </q-tooltip>
                     </q-btn>
 
-                    <q-btn flat round dense icon="fal fa-edit" color="secondary" @click="$router.push({ name: 'new-news', params: { id: props.value } })">
+                    <q-btn flat round dense icon="fal fa-edit" color="secondary" @click="$router.push({ name: 'article', params: { id: props.value } })">
                         <q-tooltip>
                             {{ $t('edit') }}
                         </q-tooltip>
@@ -78,7 +78,7 @@
                                     </div>
 
                                     <div class="col-4">
-                                        <q-btn no-caps dense icon="fal fa-edit" color="secondary" class="full-width" :label="$t('edit')" @click="$router.push({ name: 'new-news', params: { id: col.value } })" />
+                                        <q-btn no-caps dense icon="fal fa-edit" color="secondary" class="full-width" :label="$t('edit')" @click="$router.push({ name: 'article', params: { id: col.value } })" />
                                     </div>
                                 </div>
                             </q-item-section>
@@ -93,13 +93,13 @@
                 <q-card-section class="row items-center">
                     <q-avatar icon="fal fa-newspaper" color="primary" text-color="white" />
                     <span class="q-ml-sm">
-                        {{ $t('confirm_to_remove_the_news') }} <strong>{{ selected_news.title }}</strong>
+                        {{ $t('confirm_to_remove_the_article') }} <strong>{{ selected_article.title }}</strong>
                     </span>
                 </q-card-section>
 
                 <q-card-actions align="right">
                     <q-btn no-caps :label="$t('cancel')" color="positive" v-close-popup />
-                    <q-btn no-caps :label="$t('remove')" color="negative" @click="newsRemovedConfirmation()" />
+                    <q-btn no-caps :label="$t('remove')" color="negative" @click="articleRemovedConfirmation()" />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -107,10 +107,10 @@
 </template>
 
 <script>
-import news_list from '../json/news.json'
+import articles_list from '../json/articles.json'
 
 export default {
-    name: 'PageNews',
+    name: 'PageArticles',
 
     data() {
         return {
@@ -157,30 +157,30 @@ export default {
                 name: 'actions',
                 sortable: false
             }],
-            news: news_list,
+            articles: articles_list,
             pagination: {
                 descending: false,
                 page: 1,
                 rowsPerPage: 10,
                 sortBy: 'desc'
             },
-            selected_news: {},
+            selected_article: {},
             show_confirm_remove: false
         }
     },
 
     methods: {
         confirmRemove(value) {
-            this.selected_news = this.news.find(e => e.id === value)
+            this.selected_article = this.articles.find(e => e.id === value)
             this.show_confirm_remove = true
         },
 
-        newsRemovedConfirmation() {
+        articleRemovedConfirmation() {
             this.show_confirm_remove = false
             this.selected_user = {}
 
             this.$q.notify({
-                message: this.$t('news_removed_successfully'),
+                message: this.$t('article_removed_successfully'),
                 type: 'positive',
                 icon: 'fal fa-newspaper'
             })

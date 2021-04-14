@@ -75,9 +75,9 @@ export default {
                     label: 'partners'
                 },
                 {
-                    to: 'news',
+                    to: 'articles',
                     icon: 'fas fa-newspaper',
-                    label: 'news'
+                    label: 'articles'
                 }
             ]
         }

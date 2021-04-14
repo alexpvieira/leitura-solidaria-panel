@@ -27,11 +27,11 @@ export default {
             cards: [
                 {
                     number: 127,
-                    text: 'news_published'
+                    text: 'published_articles'
                 },
                 {
                     number: 441706,
-                    text: 'news_read'
+                    text: 'articles_read'
                 },
                 {
                     number: 1347,

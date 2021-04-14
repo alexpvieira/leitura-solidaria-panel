@@ -55,14 +55,14 @@ const routes = [
 				component: () => import('pages/Partner.vue') 
 			},
 			{ 
-				path: 'news', 
-				name: 'news', 
-				component: () => import('pages/News.vue') 
+				path: 'articles', 
+				name: 'articles', 
+				component: () => import('src/pages/Articles.vue') 
 			},
 			{ 
-				path: 'news/:id', 
-				name: 'new-news', 
-				component: () => import('pages/NewNews.vue') 
+				path: 'articles/:id', 
+				name: 'article', 
+				component: () => import('src/pages/Article.vue') 
 			}
 		]
 	},
