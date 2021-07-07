@@ -71,5 +71,7 @@ export default {
     user_updated_successfully: "User updated successfully",
     users: "Users",
     users_active: "Users active",
-    zip_code: "Zip code"
+    zip_code: "Zip code",
+    this_user_does_not_have_access_to_the_control_panel: "This user does not have access to the control panel",
+    invalid_email_or_password: "Invalid email or password"
 }

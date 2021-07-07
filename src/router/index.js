@@ -14,7 +14,7 @@ Vue.use(VueRouter)
  * with the Router instance.
  */
 
-export default function (/* { store, ssrContext } */) {
+export default function ({ store }) {
 	const Router = new VueRouter({
 		scrollBehavior: () => ({ x: 0, y: 0 }),
 		routes,
@@ -26,5 +26,26 @@ export default function (/* { store, ssrContext } */) {
 		base: process.env.VUE_ROUTER_BASE
 	})
 
+	Router.beforeEach((to, from, next) => {
+		if (to.meta?.acl) {
+			let access_token = store.getters['persist/access_token']
+			let user = store.getters['persist/user']
+
+			checkAcl(to.meta.acl)
+
+			if (access_token && user?.profiles?.type !== 'USER') next()
+			else {
+				store.dispatch('persist/SET_ACCESS_TOKEN', [''])
+				store.dispatch('persist/SET_USER', [{}])
+				next({name: 'login'})
+			}
+		}
+		else next()
+	})
+
 	return Router
+}
+
+function checkAcl(acl) {
+	console.log(acl)
 }

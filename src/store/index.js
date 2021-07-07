@@ -15,7 +15,7 @@ const dataState = createPersistedState({
         setItem: (key, value) => ls.set(key, value),
         removeItem: (key) => ls.remove(key),
     },
-    paths: []
+    paths: ['persist']
 })
 
 Vue.use(Vuex)

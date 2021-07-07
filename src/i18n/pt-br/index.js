@@ -71,5 +71,7 @@ export default {
     user_updated_successfully: "Usuário atualizado com sucesso",
     users: "Usuários",
     users_active: "Usuários ativos",
-    zip_code: "CEP"
+    zip_code: "CEP",
+    this_user_does_not_have_access_to_the_control_panel: "Esse usuário não possui acesso ao painel de controle",
+    invalid_email_or_password: "Email ou senha inválidos"
 }
