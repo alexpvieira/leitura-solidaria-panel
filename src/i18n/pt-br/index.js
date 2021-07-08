@@ -2,6 +2,7 @@ export default {
     add_address: "Adicionar endereço",
     add_phone_number: "Adicionar número de telefone",
     addresses: "Endereços",
+    admin: "Administrador",
     article: "Artigo",
     article_created_successfully: "Artigo criado com sucesso",
     article_image: "Imagem do artigo",
@@ -24,6 +25,7 @@ export default {
     edit: "Editar",
     email: "Email",
     home: "Início",
+    invalid_email_or_password: "Email ou senha inválidos",
     minutes_of_reading: "Minutos de leitura",
     money_raised: "Dinheiro arrecadado",
     name: "Nome",
@@ -38,6 +40,7 @@ export default {
     ngos: "ONGs",
     no_address_found: "Nenhum endereço encontrado",
     number: "Número",
+    ong: "ONG",
     partner: "Parceiro",
     partner_created_successfully: "Parceiro criado com sucesso",
     partner_removed_successfully: "Parceiro removido com sucesso",
@@ -64,6 +67,7 @@ export default {
     state: "Estado",
     street: "Logradouro",
     submit: "Enviar",
+    this_user_does_not_have_access_to_the_control_panel: "Esse usuário não possui acesso ao painel de controle",
     title: "Título",
     user: "Usuário",
     user_created_successfully: "Usuário criado com sucesso",
@@ -71,7 +75,5 @@ export default {
     user_updated_successfully: "Usuário atualizado com sucesso",
     users: "Usuários",
     users_active: "Usuários ativos",
-    zip_code: "CEP",
-    this_user_does_not_have_access_to_the_control_panel: "Esse usuário não possui acesso ao painel de controle",
-    invalid_email_or_password: "Email ou senha inválidos"
+    zip_code: "CEP"
 }

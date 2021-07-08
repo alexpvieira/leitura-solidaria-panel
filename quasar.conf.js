@@ -22,6 +22,7 @@ module.exports = function (/* ctx */) {
 			'i18n',
 			'fontawesome-pro',
 			'jwt-decode',
+			'qs',
 			'vuelidate'
 		],
 

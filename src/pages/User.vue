@@ -27,11 +27,11 @@
                 </q-select>
             </div>
 
-             <div class="col-12" v-if="user.profile.value === 2">
+             <div class="col-12" v-if="user.profile.value === 1">
                 <q-select outlined dense bg-color="white" v-model="user.ngo" :options="ngos" :label="$t('ngo')" />
             </div>
 
-            <div class="col-12" v-if="user.profile.value === 3">
+            <div class="col-12" v-if="user.profile.value === 2">
                 <q-select outlined dense bg-color="white" v-model="user.partner" :options="partners" :label="$t('partner')" />
             </div>
 
@@ -65,9 +65,7 @@ export default {
             user: {
                 email: '',
                 name: '',
-                profile: {
-                    
-                }
+                profile: {}
             },
             ngos: ngos_list.map(e => ({ label: e.name, value: e.id })),
             partners: partners_list.map(e => ({ label: e.name, value: e.id }))
@@ -75,6 +73,24 @@ export default {
     },
 
     methods: {
+        getUser() {
+            this.$q.loading.show()
+
+            this.$axios.get(`/v1/users/${this.$route.params.id}/`)
+            .then(response => {
+                this.user.email = response.data.mail
+                this.user.name = response.data.name
+                this.user.profile.label = response.data.profiles.type.toLowerCase()
+                this.user.profile.value = response.data.profiles.id
+            })
+            .catch(e => {
+                console.log(e)
+            })
+            .finally(() => {
+                this.$q.loading.hide()
+            })
+        },
+
         saveUser() {
             this.$q.notify({
                 message:this.$route.params.id === 0 ? this.$t('user_created_successfully') : this.$t('user_updated_successfully'),
@@ -88,10 +104,7 @@ export default {
 
     created() {
         if (this.$route.params.id !== 0) {
-            let user = users_list.find(e => e.id === this.$route.params.id)
-            if (user) {
-                this.user = Object.assign({}, user)
-            } 
+            this.getUser()
         }
     }
 }

@@ -65,18 +65,18 @@ export default {
                 this.$axios.post(`/login`, data)
                 .then(response => {
                     this.$store.dispatch('persist/SET_ACCESS_TOKEN', [response.data.Authorization])
+                    this.getUserData()
                 })
                 .catch(e => {
                     console.log(e)
+
+                    this.$q.loading.hide()
 
                     this.$q.notify({
                         message: this.$t('invalid_email_or_password'),
                         type: 'negative',
                         icon: 'fal fa-ban'
                     })
-                })
-                .finally(() => {
-                    this.getUserData()
                 })
             }
         },

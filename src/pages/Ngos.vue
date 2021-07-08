@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <q-table :title="$t('ngos')" :data="ngos" :columns="columns" :pagination="pagination" row-key="id" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
+        <q-table :title="$t('ngos')" :data="ngos" :columns="columns" :pagination="pagination" :loading="loading" @request="getNgos" row-key="id" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
             <template v-slot:top-right>
                 <q-btn no-caps dense color="primary" :label="$t('new_ngo')" @click="$router.push({ name: 'ngo', params: { id: 0 } })" />
             </template>
@@ -91,8 +91,6 @@
 </template>
 
 <script>
-import ngos_list from '../json/ngos.json'
-
 export default {
     name: 'PageNgos',
 
@@ -123,7 +121,7 @@ export default {
                 name: 'actions',
                 sortable: false
             }],
-            ngos: ngos_list,
+            ngos: [],
             pagination: {
                 descending: false,
                 page: 1,
@@ -131,11 +129,37 @@ export default {
                 sortBy: 'desc'
             },
             selected_ngo: {},
-            show_confirm_remove: false
+            show_confirm_remove: false,
+            loading: false
         }
     },
 
     methods: {
+        getNgos({ pagination }) {
+            this.loading = true
+            this.pagination = pagination
+
+            let order = pagination.descending ? '-' : ''
+            let order_by = pagination.sortBy ? order + pagination.sortBy : ''
+
+            let data = {
+                'page_size': this.pagination.rowsPerPage,
+                'page': this.pagination.page,
+                'ordering': order_by
+            }
+
+            this.$axios.get(`/v1/organization/?${this.$qs.stringify(data)}`)
+            .then(response => {
+                console.log(response)
+            })
+            .catch(e => {
+                console.log(e)
+            })
+            .finally(() => {
+                this.loading = false
+            })
+        },
+
         confirmRemove(value) {
             this.selected_ngo = this.ngos.find(e => e.id === value)
             this.show_confirm_remove = true
@@ -151,6 +175,10 @@ export default {
                 icon: 'fal fa-hands-heart'
             })
         }
+    },
+
+    created() {
+        this.getNgos({ pagination: this.pagination })
     }
 }
 </script>

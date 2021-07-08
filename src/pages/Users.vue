@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <q-table :title="$t('users')" :data="users" :columns="columns" :pagination="pagination" row-key="id" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
+        <q-table :title="$t('users')" :data="users" :columns="columns" :pagination="pagination" :loading="loading" @request="getUsers" row-key="id" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
             <template v-slot:top-right>
                 <q-btn no-caps dense color="primary" :label="$t('new_user')" @click="$router.push({ name: 'user', params: { id: 0 } })" />
             </template>
@@ -19,9 +19,9 @@
                 </q-td>
             </template>
 
-            <template v-slot:body-cell-profile="props">
+            <template v-slot:body-cell-profiles="props">
                 <q-td :props="props">
-                    {{ $t(getProfile(props.value)) }}
+                    {{ $t(props.value.type.toLowerCase()) }}
                 </q-td>
             </template>
 
@@ -95,7 +95,6 @@
 </template>
 
 <script>
-import users_list from '../json/users.json'
 import profiles_list from '../json/profiles.json'
 
 export default {
@@ -117,15 +116,15 @@ export default {
                 sortable: true
             }, {
                 align: 'left',
-                field: 'email',
+                field: 'mail',
                 label: 'email',
-                name: 'email',
+                name: 'mail',
                 sortable: true
             }, {
                 align: 'left',
-                field: 'profile',
+                field: 'profiles',
                 label: 'profile',
-                name: 'profile',
+                name: 'profiles',
                 sortable: true
             }, {
                 align: 'left',
@@ -142,11 +141,37 @@ export default {
             },
             selected_user: {},
             show_confirm_remove: false,
-            users: users_list
+            users: [],
+            loading: false
         }
     },
 
     methods: {
+        getUsers({ pagination }) {
+            this.loading = true
+            this.pagination = pagination
+
+            let order = pagination.descending ? '-' : ''
+            let order_by = pagination.sortBy ? order + pagination.sortBy : ''
+
+            let data = {
+                'page_size': this.pagination.rowsPerPage,
+                'page': this.pagination.page,
+                'ordering': order_by
+            }
+
+            this.$axios.get(`/v1/users/?${this.$qs.stringify(data)}`)
+            .then(response => {
+                this.users = response.data.map(e => ({...e, actions: e.id}))
+            })
+            .catch(e => {
+                console.log(e)
+            })
+            .finally(() => {
+                this.loading = false
+            })
+        },
+
         confirmRemove(value) {
             this.selected_user = this.users.find(e => e.id === value)
             this.show_confirm_remove = true
@@ -161,11 +186,11 @@ export default {
                 type: 'positive',
                 icon: 'fal fa-user'
             })
-        },
-
-        getProfile(profile_id) {
-            return profiles_list.find(e => e.value === profile_id.value)?.label
         }
+    },
+
+    created() {
+        this.getUsers({ pagination: this.pagination })
     }
 }
 </script>

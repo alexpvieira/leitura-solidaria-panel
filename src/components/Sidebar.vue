@@ -8,7 +8,7 @@
 
         <q-scroll-area :style="$q.platform.is.mobile ? 'height: calc(100% - 70px);' : 'height:100%;'">
             <q-list padding separator class="text-blue-grey-8">
-                <q-item clickable v-ripple :to="{ name: menu_item.to }" v-for="(menu_item, index) in menu_items" :key="index">
+                <q-item clickable v-ripple :to="{ name: menu_item.to }" v-for="(menu_item, index) in menu_items" :key="index" v-if="checkAcl(menu_item.acl)">
                     <q-item-section avatar>
                         <q-icon :name="menu_item.icon" />
                     </q-item-section>
@@ -57,27 +57,32 @@ export default {
                 {
                     to: 'home',
                     icon: 'fas fa-home',
-                    label: 'home'
+                    label: 'home',
+                    acl: []
                 },
                 {
                     to: 'users',
                     icon: 'fas fa-users',
-                    label: 'users'
+                    label: 'users',
+                    acl: ['ADMIN']
                 },
                 {
                     to: 'ngos',
                     icon: 'fas fa-hands-heart',
-                    label: 'ngos'
+                    label: 'ngos',
+                    acl: ['ADMIN','ONG']
                 },
                 {
                     to: 'partners',
                     icon: 'fas fa-handshake-alt',
-                    label: 'partners'
+                    label: 'partners',
+                    acl: ['ADMIN','PARTNER']
                 },
                 {
                     to: 'articles',
                     icon: 'fas fa-newspaper',
-                    label: 'articles'
+                    label: 'articles',
+                    acl: ['ADMIN','PARTNER']
                 }
             ]
         }
@@ -85,7 +90,8 @@ export default {
 
     computed: {
         ...mapGetters({
-            drawer_open_store: 'common/drawer_open'
+            drawer_open_store: 'common/drawer_open',
+            user: 'persist/user'
         }),
         
         drawerOpen: {
@@ -99,6 +105,18 @@ export default {
 	},
 
     methods: {
+        checkAcl(acl) {
+            if (acl.length === 0) return true
+            else {
+                let profile = this.user?.profiles?.type
+
+                if (!profile) return false
+
+                if (acl.includes(profile)) return true
+                else return false
+            }
+        },
+
         changeLanguage(language) {
             import('quasar/lang/' + language)
             .then(lang => {
@@ -108,6 +126,8 @@ export default {
         },
         
         signOut() {
+            this.$store.dispatch('persist/SET_ACCESS_TOKEN', [''])
+            this.$store.dispatch('persist/SET_USER', [{}])
             this.$store.dispatch('common/SET_DRAWER_STATE', [false])
             this.$router.push({ name: 'login' })
         }

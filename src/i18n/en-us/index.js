@@ -2,6 +2,7 @@ export default {
     add_address: "Add address",
     add_phone_number: "Add phone number",
     addresses: "Addresses",
+    admin: "Administrator",
     article: "Article",
     article_created_successfully: "Article created successfully",
     article_image: "Article image",
@@ -24,6 +25,7 @@ export default {
     edit: "Edit",
     email: "Email",
     home: "Home",
+    invalid_email_or_password: "Invalid email or password",
     minutes_of_reading: "Minutes of reading",
     money_raised: "Money raised",
     name: "Name",
@@ -38,6 +40,7 @@ export default {
     ngos: "NGOs",
     no_address_found: "No address found",
     number: "Number",
+    ong: "NGO",
     partner: "Partner",
     partner_created_successfully: "Partner created successfully",
     partner_removed_successfully: "Partner removed successfully",
@@ -64,6 +67,7 @@ export default {
     state: "State",
     street: "Street",
     submit: "Submit",
+    this_user_does_not_have_access_to_the_control_panel: "This user does not have access to the control panel",
     title: "Title",
     user: "User",
     user_created_successfully: "User created successfully",
@@ -71,7 +75,5 @@ export default {
     user_updated_successfully: "User updated successfully",
     users: "Users",
     users_active: "Users active",
-    zip_code: "Zip code",
-    this_user_does_not_have_access_to_the_control_panel: "This user does not have access to the control panel",
-    invalid_email_or_password: "Invalid email or password"
+    zip_code: "Zip code"
 }
