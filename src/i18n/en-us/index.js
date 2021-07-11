@@ -15,6 +15,7 @@ export default {
     back: "Back",
     cancel: "Cancel",
     city: "City",
+    client: "Client",
     cnpj: "CNPJ",
     complement: "Complement",
     confirm_to_remove_the_article: "Confirm to remove the article",
@@ -75,5 +76,7 @@ export default {
     user_updated_successfully: "User updated successfully",
     users: "Users",
     users_active: "Users active",
-    zip_code: "Zip code"
+    zip_code: "Zip code",
+    error_creating_user: "Error creating user",
+    error_updating_user: "Error updating user"
 }

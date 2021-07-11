@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <q-table :title="$t('ngos')" :data="ngos" :columns="columns" :pagination="pagination" :loading="loading" @request="getNgos" row-key="id" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
+        <q-table :title="$t('ngos')" :data="ngos" :columns="columns" :pagination.sync="pagination" :loading="loading" @request="getNgos" row-key="cod_partner" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
             <template v-slot:top-right>
                 <q-btn no-caps dense color="primary" :label="$t('new_ngo')" @click="$router.push({ name: 'ngo', params: { id: 0 } })" />
             </template>
@@ -13,15 +13,9 @@
                 </q-tr>
             </template>
 
-            <template v-slot:body-cell-id="props">
+            <template v-slot:body-cell-cod_partner="props">
                 <q-td auto-width :props="props">
                     {{ props.value }}
-                </q-td>
-            </template>
-
-            <template v-slot:body-cell-profile="props">
-                <q-td :props="props">
-                    {{ $t(props.value) }}
                 </q-td>
             </template>
 
@@ -44,7 +38,7 @@
             <template v-slot:item="props">
                 <q-card class="full-width q-mb-md q-pt-md">
                     <q-list dense>
-                        <q-item v-for="col in props.cols.filter(col => col.name !== 'actions' && col.name !== 'id')" :key="col.name">
+                        <q-item v-for="col in props.cols.filter(col => col.name !== 'actions' && col.name !== 'cod_partner')" :key="col.name">
                             <q-item-section>
                                 <q-item-label>{{ $t(col.label) }}</q-item-label>
                             </q-item-section>
@@ -98,9 +92,9 @@ export default {
         return {
             columns: [{
                 align: 'left',
-                field: 'id',
+                field: 'cod_partner',
                 label: '',
-                name: 'id',
+                name: 'cod_partner',
                 sortable: false
             }, {
                 align: 'left',
@@ -110,9 +104,9 @@ export default {
                 sortable: true
             }, {
                 align: 'left',
-                field: 'email',
+                field: 'mail',
                 label: 'email',
-                name: 'email',
+                name: 'mail',
                 sortable: true
             }, {
                 align: 'left',
@@ -123,10 +117,11 @@ export default {
             }],
             ngos: [],
             pagination: {
+                sortBy: 'desc',
                 descending: false,
                 page: 1,
                 rowsPerPage: 10,
-                sortBy: 'desc'
+                rowsNumber: 10
             },
             selected_ngo: {},
             show_confirm_remove: false,
@@ -143,14 +138,15 @@ export default {
             let order_by = pagination.sortBy ? order + pagination.sortBy : ''
 
             let data = {
-                'page_size': this.pagination.rowsPerPage,
+                'linesPerPage': this.pagination.rowsPerPage,
                 'page': this.pagination.page,
                 'ordering': order_by
             }
 
-            this.$axios.get(`/v1/organization/?${this.$qs.stringify(data)}`)
+            this.$axios.get(`/v1/ongs/page?${this.$qs.stringify(data)}`)
             .then(response => {
-                console.log(response)
+                this.pagination.rowsNumber = response.data.total_elements
+                this.ngos = response.data.results.map(e => ({...e, actions: e.cod_partner}))
             })
             .catch(e => {
                 console.log(e)

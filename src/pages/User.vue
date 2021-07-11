@@ -8,15 +8,15 @@
 
         <q-form class="row justify-end q-col-gutter-sm">
             <div class="col-12">
-                <q-input outlined dense bg-color="white" v-model="user.name" :label="$t('name')" />
+                <q-input outlined dense hide-bottom-space bg-color="white" v-model="user.name" :label="$t('name')" :error="$v.user.name.$error" @input="$v.user.name.$touch" />
             </div>
 
             <div class="col-12">
-                <q-input outlined dense bg-color="white" v-model="user.email" :label="$t('email')" type="email" />
+                <q-input outlined dense hide-bottom-space bg-color="white" v-model="user.email" :label="$t('email')" type="email" :error="$v.user.email.$error" @input="$v.user.email.$touch" />
             </div>
 
             <div class="col-12">
-                <q-select outlined dense bg-color="white" v-model="user.profile" :options="profiles" :label="$t('profile')" :display-value="$t(user.profile.label)">
+                <q-select outlined dense hide-bottom-space bg-color="white" v-model="user.profile" :options="profiles" :label="$t('profile')" :display-value="$t(user.profile.label)" :error="$v.user.profile.$error" @input="$v.user.profile.$touch">
                     <template v-slot:option="scope">
                         <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
                             <q-item-section>
@@ -28,11 +28,11 @@
             </div>
 
              <div class="col-12" v-if="user.profile.value === 1">
-                <q-select outlined dense bg-color="white" v-model="user.ngo" :options="ngos" :label="$t('ngo')" />
+                <q-select outlined dense hide-bottom-space bg-color="white" v-model="user.ngo" :options="ngos" :label="$t('ngo')" :error="$v.user.ngo.$error" @input="$v.user.ngo.$touch" />
             </div>
 
-            <div class="col-12" v-if="user.profile.value === 2">
-                <q-select outlined dense bg-color="white" v-model="user.partner" :options="partners" :label="$t('partner')" />
+            <div class="col-12" v-if="user.profile.value === 3">
+                <q-select outlined dense hide-bottom-space bg-color="white" v-model="user.partner" :options="partners" :label="$t('partner')" :error="$v.user.partner.$error" @input="$v.user.partner.$touch" />
             </div>
 
             <div class="col-12 q-mt-md">
@@ -51,37 +51,83 @@
 </template>
 
 <script>
-import users_list from '../json/users.json'
-import profiles_list from '../json/profiles.json'
-import partners_list from '../json/partners.json'
-import ngos_list from '../json/ngos.json'
+import { required, requiredIf } from 'vuelidate/lib/validators'
 
 export default {
     name: 'PageUser',
 
     data() {
         return {
-            profiles: profiles_list,
+            ngos: [],
+            partners: [],
+            profiles: [],
             user: {
+                avatar: '',
                 email: '',
                 name: '',
+                ngo: null,
+                partner: null,
                 profile: {}
             },
-            ngos: ngos_list.map(e => ({ label: e.name, value: e.id })),
-            partners: partners_list.map(e => ({ label: e.name, value: e.id }))
+            user_id: null
         }
     },
 
     methods: {
-        getUser() {
+        getLists() {
             this.$q.loading.show()
 
-            this.$axios.get(`/v1/users/${this.$route.params.id}/`)
+            this.$axios.all([this.getProfiles(), this.getNgos(), this.getPartners()])
+            .then(this.$axios.spread((profiles, ngos, partners) => {
+                this.profiles = profiles.data.map(e => ({...e, label: e.type.toLowerCase(), value: e.cod_profile}))
+                this.ngos = ngos.data.map(e => ({...e, label: e.name, value: e.cod_ongs}))
+                this.partners = partners.data.map(e => ({...e, label: e.name, value: e.cod_partner}))
+            }))
+            .catch(e => {
+                console.log(e)
+            })
+            .finally(() => {
+                if (this.user_id !== 0) this.getUser()
+                else this.$q.loading.hide()
+            })
+        },
+
+        getProfiles() {
+            return this.$axios.get(`/v1/profiles`)
+        },
+
+        getNgos() {
+            return this.$axios.get(`/v1/ongs/partial`)
+        },
+
+        getPartners() {
+            return this.$axios.get(`/v1/partner/partial`)
+        },
+
+        getUser() {
+            this.$axios.get(`/v1/users/${this.user_id}/`)
             .then(response => {
-                this.user.email = response.data.mail
-                this.user.name = response.data.name
-                this.user.profile.label = response.data.profiles.type.toLowerCase()
-                this.user.profile.value = response.data.profiles.id
+                let d = response.data
+
+                this.user.email = d.mail
+                this.user.name = d.name
+                this.user.avatar = d.url_img
+                this.user.profile.label = d.profiles.type.toLowerCase()
+                this.user.profile.value = d.profiles.cod_profile
+
+                if (d.ong) {
+                    this.user.ngo = {
+                        label: d.ong.name,
+                        value: d.ong.cod_ongs
+                    }
+                }
+
+                if (d.partner) {
+                    this.user.partner = {
+                        label: d.partner.name,
+                        value: d.partner.cod_partner
+                    }
+                }
             })
             .catch(e => {
                 console.log(e)
@@ -92,19 +138,98 @@ export default {
         },
 
         saveUser() {
-            this.$q.notify({
-                message:this.$route.params.id === 0 ? this.$t('user_created_successfully') : this.$t('user_updated_successfully'),
-                type: 'positive',
-                icon: 'fal fa-save'
-            })
+            this.$v.$touch()
 
-            this.$router.push({ name: 'users' })
+            if (!this.$v.$error) {
+                this.$q.loading.show()
+
+                let data = {
+                    full_name: this.user.name,
+                    mail: this.user.email,
+                    url_image: this.user.avatar,
+                    cod_profile: this.user.profile.value,
+                    cod_ongs: this.user.profile.value === 1 ? this.user.ngo.value : null,
+                    cod_partner: this.user.profile.value === 3 ? this.user.partner.value : null
+                }
+
+                if (this.user_id === 0) {
+                    this.$axios.post(`/v1/users`, data)
+                    .then(response => {
+                        this.$q.notify({
+                            message: this.$t('user_created_successfully'),
+                            type: 'positive',
+                            icon: 'fal fa-save'
+                        })
+
+                        this.$router.push({ name: 'users' })
+                    })
+                    .catch(e => {
+                        console.log(e)
+
+                        this.$q.loading.hide()
+
+                        this.$q.notify({
+                            message: this.$t('error_creating_user'),
+                            type: 'negative',
+                            icon: 'fal fa-ban'
+                        })
+                    })
+                    .finally(() => {
+                        this.$q.loading.hide()
+                    })
+                }
+                else {
+                    this.$axios.put(`/v1/users/${this.user_id}`, data)
+                    .then(response => {
+                        this.$q.notify({
+                            message: this.$t('user_updated_successfully'),
+                            type: 'positive',
+                            icon: 'fal fa-save'
+                        })
+
+                        this.$router.push({ name: 'users' })
+                    })
+                    .catch(e => {
+                        console.log(e)
+
+                        this.$q.loading.hide()
+
+                        this.$q.notify({
+                            message: this.$t('error_updating_user'),
+                            type: 'negative',
+                            icon: 'fal fa-ban'
+                        })
+                    })
+                    .finally(() => {
+                        this.$q.loading.hide()
+                    })
+                }
+            }
         }
     },
 
     created() {
-        if (this.$route.params.id !== 0) {
-            this.getUser()
+        this.user_id = parseInt(this.$route.params.id)
+        this.getLists()
+    },
+
+    validations() {
+        return {
+            user: {
+                name: { required },
+                email: { required },
+                profile: { required },
+                ngo: {
+                    requiredIf: requiredIf(() => {
+                        return this.user.profile?.value === 1
+                    })
+                },
+                partner: {
+                    requiredIf: requiredIf(() => {
+                        return this.user.profile?.value === 3
+                    })
+                }
+            }
         }
     }
 }

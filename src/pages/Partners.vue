@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <q-table :title="$t('partners')" :data="partners" :columns="columns" :pagination="pagination" row-key="id" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
+        <q-table :title="$t('partners')" :data="partners" :columns="columns" :pagination.sync="pagination" :loading="loading" @request="getPartners" row-key="cod_partner" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
             <template v-slot:top-right>
                 <q-btn no-caps dense color="primary" :label="$t('new_partner')" @click="$router.push({ name: 'partner', params: { id: 0 } })" />
             </template>
@@ -13,15 +13,9 @@
                 </q-tr>
             </template>
 
-            <template v-slot:body-cell-id="props">
+            <template v-slot:body-cell-cod_partner="props">
                 <q-td auto-width :props="props">
                     {{ props.value }}
-                </q-td>
-            </template>
-
-            <template v-slot:body-cell-profile="props">
-                <q-td :props="props">
-                    {{ $t(props.value) }}
                 </q-td>
             </template>
 
@@ -91,8 +85,6 @@
 </template>
 
 <script>
-import partners_list from '../json/partners.json'
-
 export default {
     name: 'PagePartners',
 
@@ -100,9 +92,9 @@ export default {
         return {
             columns: [{
                 align: 'left',
-                field: 'id',
+                field: 'cod_partner',
                 label: '',
-                name: 'id',
+                name: 'cod_partner',
                 sortable: false
             }, {
                 align: 'left',
@@ -112,9 +104,9 @@ export default {
                 sortable: true
             }, {
                 align: 'left',
-                field: 'email',
+                field: 'mail',
                 label: 'email',
-                name: 'email',
+                name: 'mail',
                 sortable: true
             }, {
                 align: 'left',
@@ -129,13 +121,40 @@ export default {
                 rowsPerPage: 10,
                 sortBy: 'desc'
             },
-            partners: partners_list,
+            partners: [],
             selected_partner: {},
-            show_confirm_remove: false
+            show_confirm_remove: false,
+            loading: false
         }
     },
 
     methods: {
+        getPartners({ pagination }) {
+            this.loading = true
+            this.pagination = pagination
+
+            let order = pagination.descending ? '-' : ''
+            let order_by = pagination.sortBy ? order + pagination.sortBy : ''
+
+            let data = {
+                'linesPerPage': this.pagination.rowsPerPage,
+                'page': this.pagination.page,
+                'ordering': order_by
+            }
+
+            this.$axios.get(`/v1/partner/page?${this.$qs.stringify(data)}`)
+            .then(response => {
+                this.pagination.rowsNumber = response.data.total_elements
+                this.partners = response.data.results.map(e => ({...e, actions: e.cod_partner}))
+            })
+            .catch(e => {
+                console.log(e)
+            })
+            .finally(() => {
+                this.loading = false
+            })
+        },
+
         confirmRemove(value) {
             this.selected_partner = this.partners.find(e => e.id === value)
             this.show_confirm_remove = true
@@ -151,6 +170,10 @@ export default {
                 icon: 'fal fa-handshake-alt'
             })
         }
+    },
+
+    created() {
+        this.getPartners({ pagination: this.pagination })
     }
 }
 </script>

@@ -121,7 +121,6 @@
 </template>
 
 <script>
-import partners_list from '../json/partners.json'
 import states_list from '../json/states.json'
 import cities_list from '../json/cities.json'
 
@@ -148,7 +147,8 @@ export default {
                 phones: [{
                     number: ''
                 }]
-            }
+            },
+            partner_id: null
         }
     },
 
@@ -159,6 +159,35 @@ export default {
     },
 
     methods: {
+        getPartner() {
+            this.$q.loading.show()
+
+            this.$axios.get(`/v1/partner/${this.partner_id}/`)
+            .then(response => {
+                let d = response.data
+
+                this.partner.name = d.name
+                this.partner.email = d.mail
+                this.partner.cnpj = d.num_cnpj
+                this.partner.phones = d.phones.map(e => ({ number: e} ))
+                this.partner.addresses = d.address.map(e => ({ ...e, 
+                    city: null,
+                    complement: e.complement,
+                    district: e.district,
+                    number: e.number,
+                    state: null,
+                    street: e.street,
+                    zip_code: e.zip_code
+                }))
+            })
+            .catch(e => {
+                console.log(e)
+            })
+            .finally(() => {
+                this.$q.loading.hide()
+            })
+        },
+
         savePartner() {
             this.$q.notify({
                 message:this.$route.params.id === 0 ? this.$t('partner_created_successfully') : this.$t('partner_updated_successfully'),
@@ -206,16 +235,8 @@ export default {
     },
 
     created() {
-        if (this.$route.params.id !== 0) {
-            let partner = partners_list.find(e => e.id === this.$route.params.id)
-            if (partner) {
-                this.partner = Object.assign({}, partner)
-
-                this.partner.addresses.forEach((address, index) => {
-                    this.getCities(address.state, index)
-                })
-            } 
-        }
+        this.partner_id = parseInt(this.$route.params.id)
+        if (this.partner_id !== 0) this.getPartner()
     }
 }
 </script>

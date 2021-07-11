@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <q-table :title="$t('users')" :data="users" :columns="columns" :pagination="pagination" :loading="loading" @request="getUsers" row-key="id" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
+        <q-table :title="$t('users')" :data="users" :columns="columns" :pagination.sync="pagination" :loading="loading" @request="getUsers" row-key="id" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
             <template v-slot:top-right>
                 <q-btn no-caps dense color="primary" :label="$t('new_user')" @click="$router.push({ name: 'user', params: { id: 0 } })" />
             </template>
@@ -134,10 +134,11 @@ export default {
                 sortable: false
             }],
             pagination: {
+                sortBy: 'desc',
                 descending: false,
                 page: 1,
                 rowsPerPage: 10,
-                sortBy: 'desc'
+                rowsNumber: 10
             },
             selected_user: {},
             show_confirm_remove: false,
@@ -155,14 +156,15 @@ export default {
             let order_by = pagination.sortBy ? order + pagination.sortBy : ''
 
             let data = {
-                'page_size': this.pagination.rowsPerPage,
+                'linesPerPage': this.pagination.rowsPerPage,
                 'page': this.pagination.page,
                 'ordering': order_by
             }
 
-            this.$axios.get(`/v1/users/?${this.$qs.stringify(data)}`)
+            this.$axios.get(`/v1/users/page?${this.$qs.stringify(data)}`)
             .then(response => {
-                this.users = response.data.map(e => ({...e, actions: e.id}))
+                this.pagination.rowsNumber = response.data.total_elements
+                this.users = response.data.results.map(e => ({...e, actions: e.id}))
             })
             .catch(e => {
                 console.log(e)

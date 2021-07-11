@@ -121,7 +121,6 @@
 </template>
 
 <script>
-import ngos_list from '../json/ngos.json'
 import states_list from '../json/states.json'
 import cities_list from '../json/cities.json'
 
@@ -148,7 +147,8 @@ export default {
                 phones: [{
                     number: ''
                 }]
-            }
+            },
+            ngo_id: null
         }
     },
 
@@ -159,6 +159,35 @@ export default {
     },
 
     methods: {
+        getNgo() {
+            this.$q.loading.show()
+
+            this.$axios.get(`/v1/ongs/${this.ngo_id}/`)
+            .then(response => {
+                let d = response.data
+
+                this.ngo.name = d.name
+                this.ngo.email = d.mail
+                this.ngo.cnpj = d.num_cnpj
+                this.ngo.phones = d.phones.map(e => ({ number: e} ))
+                this.ngo.addresses = d.address.map(e => ({ ...e, 
+                    city: null,
+                    complement: e.complement,
+                    district: e.district,
+                    number: e.number,
+                    state: null,
+                    street: e.street,
+                    zip_code: e.zip_code
+                }))
+            })
+            .catch(e => {
+                console.log(e)
+            })
+            .finally(() => {
+                this.$q.loading.hide()
+            })
+        },
+
         saveNgo() {
             this.$q.notify({
                 message:this.$route.params.id === 0 ? this.$t('ngo_created_successfully') : this.$t('ngo_updated_successfully'),
@@ -206,16 +235,8 @@ export default {
     },
 
     created() {
-        if (this.$route.params.id !== 0) {
-            let ngo = ngos_list.find(e => e.id === this.$route.params.id)
-            if (ngo) {
-                this.ngo = Object.assign({}, ngo)
-
-                this.ngo.addresses.forEach((address, index) => {
-                    this.getCities(address.state, index)
-                })
-            } 
-        }
+        this.ngo_id = parseInt(this.$route.params.id)
+        if (this.ngo_id !== 0) this.getNgo()
     }
 }
 </script>
