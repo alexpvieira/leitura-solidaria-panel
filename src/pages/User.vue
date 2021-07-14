@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { required, requiredIf } from 'vuelidate/lib/validators'
+import { required, requiredIf, email } from 'vuelidate/lib/validators'
 
 export default {
     name: 'PageUser',
@@ -217,7 +217,7 @@ export default {
         return {
             user: {
                 name: { required },
-                email: { required },
+                email: { required, email },
                 profile: { required },
                 ngo: {
                     requiredIf: requiredIf(() => {

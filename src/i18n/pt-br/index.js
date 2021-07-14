@@ -25,6 +25,12 @@ export default {
     created_by_the_b_group_for_the_software_engeneering_mba: "Criado pelo Grupo B para o MBA em Engenharia de Software",
     edit: "Editar",
     email: "Email",
+    error_creating_ngo: "Erro ao criar ONG",
+    error_creating_partner: "Erro ao criar parceiro",
+    error_creating_user: "Erro ao criar usuário",
+    error_updating_ngo: "Erro ao atualizar ONG",
+    error_updating_partner: "Erro ao atualizar ONG",
+    error_updating_user: "Erro ao atualizar usuário",
     home: "Início",
     invalid_email_or_password: "Email ou senha inválidos",
     minutes_of_reading: "Minutos de leitura",
@@ -76,7 +82,5 @@ export default {
     user_updated_successfully: "Usuário atualizado com sucesso",
     users: "Usuários",
     users_active: "Usuários ativos",
-    zip_code: "CEP",
-    error_creating_user: "Erro ao criar usuário",
-    error_updating_user: "Erro ao atualizar usuário"
+    zip_code: "CEP"
 }

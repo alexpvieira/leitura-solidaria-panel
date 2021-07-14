@@ -10,15 +10,15 @@
             <div class="col-12">
                 <div class="row q-col-gutter-sm">
                     <div class="col-12">
-                        <q-input outlined dense bg-color="white" v-model="partner.name" :label="$t('name')" />
+                        <q-input outlined dense hide-bottom-space bg-color="white" v-model="partner.name" :label="$t('name')" :error="$v.partner.name.$error" @input="$v.partner.name.$touch" />
                     </div>
 
                     <div class="col-12">
-                        <q-input outlined dense bg-color="white" v-model="partner.email" :label="$t('email')" type="email" />
+                        <q-input outlined dense hide-bottom-space bg-color="white" v-model="partner.email" :label="$t('email')" type="email" :error="$v.partner.email.$error" @input="$v.partner.email.$touch" />
                     </div>
 
                     <div class="col-12">
-                        <q-input outlined dense bg-color="white" v-model="partner.cnpj" :label="$t('cnpj')" />
+                        <q-input outlined dense hide-bottom-space bg-color="white" v-model="partner.cnpj" :label="$t('cnpj')" :error="$v.partner.cnpj.$error" @input="$v.partner.cnpj.$touch" />
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                     <div class="col-12" v-for="(phone, index) in partner.phones" :key="index">
                         <div class="row">
                             <div class="col-12">
-                                <q-input outlined dense bg-color="white" v-model="phone.number" :label="$t('phone')">
+                                <q-input outlined dense hide-bottom-space bg-color="white" v-model="phone.number" :label="$t('phone')" :error="$v.partner.phones.$each[index].number.$error" @input="$v.partner.phones.$each[index].number.$touch">
                                     <template v-slot:append v-if="index > 0">
                                         <q-btn flat dense icon="fal fa-times" color="negative" @click="removePhone(index)">
                                             <q-tooltip anchor="bottom left" self="top left">
@@ -70,7 +70,7 @@
                             </div>
 
                             <div class="col-12">
-                                <q-input outlined dense bg-color="white" v-model="address.street" :label="$t('street')">
+                                <q-input outlined dense hide-bottom-space bg-color="white" v-model="address.street" :label="$t('street')" :error="$v.partner.addresses.$each[index].street.$error" @input="$v.partner.addresses.$each[index].street.$touch">
                                     <template v-slot:append v-if="index > 0">
                                         <q-btn flat dense icon="fal fa-times" color="negative" @click="removeAddress(index)">
                                             <q-tooltip anchor="bottom left" self="top left">
@@ -82,23 +82,23 @@
                             </div>
 
                             <div class="col-xs-12 col-sm-6">
-                                <q-input outlined dense bg-color="white" v-model="address.number" :label="$t('number')" type="number" />
+                                <q-input outlined dense hide-bottom-space bg-color="white" v-model="address.number" :label="$t('number')" type="number" :error="$v.partner.addresses.$each[index].number.$error" @input="$v.partner.addresses.$each[index].number.$touch" />
                             </div>
 
                             <div class="col-xs-12 col-sm-6">
-                                <q-input outlined dense bg-color="white" v-model="address.complement" :label="$t('complement')" />
+                                <q-input outlined dense hide-bottom-space bg-color="white" v-model="address.complement" :label="$t('complement')" />
                             </div>
 
                             <div class="col-xs-12 col-sm-6">
-                                <q-select outlined dense bg-color="white" v-model="address.state" :options="states" :label="$t('state')" @input="clearCity(address.state, index)" />
+                                <q-input outlined dense hide-bottom-space bg-color="white" v-model="address.state" :label="$t('state')" :error="$v.partner.addresses.$each[index].state.$error" @input="$v.partner.addresses.$each[index].state.$touch" />
                             </div>
 
                             <div class="col-xs-12 col-sm-6">
-                                <q-select outlined dense bg-color="white" v-model="address.city" :options="address.cities" :label="$t('city')" />
+                                <q-input outlined dense hide-bottom-space bg-color="white" v-model="address.city" :label="$t('city')" :error="$v.partner.addresses.$each[index].city.$error" @input="$v.partner.addresses.$each[index].city.$touch" />
                             </div>
 
                             <div class="col-12">
-                                <q-input outlined dense bg-color="white" v-model="address.zip_code" :label="$t('zip_code')" />
+                                <q-input outlined dense hide-bottom-space bg-color="white" v-model="address.zip_code" :label="$t('zip_code')" :error="$v.partner.addresses.$each[index].zip_code.$error" @input="$v.partner.addresses.$each[index].zip_code.$touch" />
                             </div>
                         </div>
                     </div>
@@ -121,8 +121,7 @@
 </template>
 
 <script>
-import states_list from '../json/states.json'
-import cities_list from '../json/cities.json'
+import { required, requiredIf, email } from 'vuelidate/lib/validators'
 
 export default {
     name: 'Pagepartner',
@@ -131,7 +130,6 @@ export default {
         return {
             partner: {
                 addresses: [{
-                    cities: [],
                     city: null,
                     complement: '',
                     district: '',
@@ -152,12 +150,6 @@ export default {
         }
     },
 
-    computed: {
-        states() {
-            return states_list
-        }
-    },
-
     methods: {
         getPartner() {
             this.$q.loading.show()
@@ -171,11 +163,11 @@ export default {
                 this.partner.cnpj = d.num_cnpj
                 this.partner.phones = d.phones.map(e => ({ number: e} ))
                 this.partner.addresses = d.address.map(e => ({ ...e, 
-                    city: null,
+                    city: e.city,
                     complement: e.complement,
                     district: e.district,
                     number: e.number,
-                    state: null,
+                    state: e.state,
                     street: e.street,
                     zip_code: e.zip_code
                 }))
@@ -189,13 +181,70 @@ export default {
         },
 
         savePartner() {
-            this.$q.notify({
-                message:this.$route.params.id === 0 ? this.$t('partner_created_successfully') : this.$t('partner_updated_successfully'),
-                type: 'positive',
-                icon: 'fal fa-save'
-            })
+            this.$v.$touch()
 
-            this.$router.push({ name: 'partners' })
+            if (!this.$v.$error) {
+                let data = {
+                    name: this.partner.name,
+                    mail: this.partner.email,
+                    num_cnpj: this.partner.cnpj,
+                    address: this.partner.addresses.map(e => ({...e})),
+                    phones: this.partner.phones.map(e => e.number)
+                }
+
+                if (this.partner_id === 0) {
+                    this.$axios.post(`/v1/partner`, data)
+                    .then(response => {
+                        this.$q.notify({
+                            message: this.$t('partner_created_successfully'),
+                            type: 'positive',
+                            icon: 'fal fa-save'
+                        })
+
+                        this.$router.push({ name: 'partners' })
+                    })
+                    .catch(e => {
+                        console.log(e)
+
+                        this.$q.loading.hide()
+
+                        this.$q.notify({
+                            message: this.$t('error_creating_partner'),
+                            type: 'negative',
+                            icon: 'fal fa-ban'
+                        })
+                    })
+                    .finally(() => {
+                        this.$q.loading.hide()
+                    })
+                }
+                else {
+                    this.$axios.put(`/v1/partner/${this.partner_id}`, data)
+                    .then(response => {
+                        this.$q.notify({
+                            message: this.$t('partner_updated_successfully'),
+                            type: 'positive',
+                            icon: 'fal fa-save'
+                        })
+
+                        this.$router.push({ name: 'partners' })
+                    })
+                    .catch(e => {
+                        console.log(e)
+
+                        this.$q.loading.hide()
+
+                        this.$q.notify({
+                            message: this.$t('error_updating_partner'),
+                            type: 'negative',
+                            icon: 'fal fa-ban'
+                        })
+                    })
+                    .finally(() => {
+                        this.$q.loading.hide()
+                    })
+                }
+            }
         },
 
         addPhone() {
@@ -222,21 +271,42 @@ export default {
 
         removeAddress(index) {
             this.partner.addresses.splice(index, 1)
-        },
-
-        clearCity(state, index) {
-            this.partner.addresses[index].city = null
-            this.getCities(state, index)
-        },
-
-        getCities(state, index) {
-            this.partner.addresses[index].cities = cities_list.filter(e => e.state_id === state.value)
         }
     },
 
     created() {
         this.partner_id = parseInt(this.$route.params.id)
         if (this.partner_id !== 0) this.getPartner()
+    },
+
+    validations() {
+        return {
+            partner: {
+                name: { required },
+                email: { required, email },
+                cnpj: {
+                    required,
+                    isValid() {
+                        return this.$validateCnpj(this.partner.cnpj)
+                    }
+                },
+                phones: {
+                    $each: {
+                        number: { required }
+                    }
+                },
+                addresses: {
+                    $each: {
+                        city: { required },
+                        district: { required },
+                        number: { required },
+                        state: { required },
+                        street: { required },
+                        zip_code: { required }
+                    }
+                }
+            }
+        }
     }
 }
 </script>

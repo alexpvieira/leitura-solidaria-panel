@@ -25,6 +25,12 @@ export default {
     created_by_the_b_group_for_the_software_engeneering_mba: "Created by the B Group for the Software Engeneering MBA",
     edit: "Edit",
     email: "Email",
+    error_creating_ngo: "Error creating NGO",
+    error_creating_partner: "Error creating partner",
+    error_creating_user: "Error creating user",
+    error_updating_ngo: "Error updating NGO",
+    error_updating_partner: "Error updating partner",
+    error_updating_user: "Error updating user",
     home: "Home",
     invalid_email_or_password: "Invalid email or password",
     minutes_of_reading: "Minutes of reading",
@@ -76,7 +82,5 @@ export default {
     user_updated_successfully: "User updated successfully",
     users: "Users",
     users_active: "Users active",
-    zip_code: "Zip code",
-    error_creating_user: "Error creating user",
-    error_updating_user: "Error updating user"
+    zip_code: "Zip code"
 }

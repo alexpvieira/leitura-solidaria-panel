@@ -23,6 +23,7 @@ module.exports = function (/* ctx */) {
 			'fontawesome-pro',
 			'jwt-decode',
 			'qs',
+			'validate-cnpj',
 			'vuelidate'
 		],
 

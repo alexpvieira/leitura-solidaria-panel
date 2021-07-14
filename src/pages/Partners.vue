@@ -156,18 +156,37 @@ export default {
         },
 
         confirmRemove(value) {
-            this.selected_partner = this.partners.find(e => e.id === value)
+            this.selected_partner = this.partners.find(e => e.cod_partner === value)
             this.show_confirm_remove = true
         },
 
         partnerRemovedConfirmation() {
-            this.show_confirm_remove = false
-            this.selected_partner = {}
+            this.$q.loading.show()
 
-            this.$q.notify({
-                message: this.$t('partner_removed_successfully'),
-                type: 'positive',
-                icon: 'fal fa-handshake-alt'
+            this.$axios.delete(`/v1/partner/${this.selected_partner.cod_partner}`)
+            .then(response => {
+                this.getPartners({ pagination: {
+                        sortBy: 'desc',
+                        descending: false,
+                        page: 1,
+                        rowsPerPage: 10,
+                        rowsNumber: 10
+                    } 
+                })
+            })
+            .catch(e => {
+                console.log(e)
+            })
+            .finally(() => {
+                this.show_confirm_remove = false
+                this.selected_partner = {}
+                this.$q.loading.hide()
+
+                this.$q.notify({
+                    message: this.$t('partner_removed_successfully'),
+                    type: 'positive',
+                    icon: 'fal fa-handshake-alt'
+                })
             })
         }
     },

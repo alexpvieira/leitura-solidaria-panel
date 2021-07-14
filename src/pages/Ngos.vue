@@ -157,18 +157,37 @@ export default {
         },
 
         confirmRemove(value) {
-            this.selected_ngo = this.ngos.find(e => e.id === value)
+            this.selected_ngo = this.ngos.find(e => e.cod_partner === value)
             this.show_confirm_remove = true
         },
 
         ngoRemovedConfirmation() {
-            this.show_confirm_remove = false
-            this.selected_ngo = {}
+            this.$q.loading.show()
 
-            this.$q.notify({
-                message: this.$t('ngo_removed_successfully'),
-                type: 'positive',
-                icon: 'fal fa-hands-heart'
+            this.$axios.delete(`/v1/ongs/${this.selected_ngo.cod_partner}`)
+            .then(response => {
+                this.getNgos({ pagination: {
+                        sortBy: 'desc',
+                        descending: false,
+                        page: 1,
+                        rowsPerPage: 10,
+                        rowsNumber: 10
+                    } 
+                })
+            })
+            .catch(e => {
+                console.log(e)
+            })
+            .finally(() => {
+                this.show_confirm_remove = false
+                this.selected_ngo = {}
+                this.$q.loading.hide()
+
+                this.$q.notify({
+                    message: this.$t('ngo_removed_successfully'),
+                    type: 'positive',
+                    icon: 'fal fa-hands-heart'
+                })
             })
         }
     },

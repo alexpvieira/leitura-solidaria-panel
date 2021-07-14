@@ -180,13 +180,32 @@ export default {
         },
 
         userRemovedConfirmation() {
-            this.show_confirm_remove = false
-            this.selected_user = {}
+            this.$q.loading.show()
 
-            this.$q.notify({
-                message: this.$t('user_removed_successfully'),
-                type: 'positive',
-                icon: 'fal fa-user'
+            this.$axios.delete(`/v1/users/${this.selected_user.id}`)
+            .then(response => {
+                this.getUsers({ pagination: {
+                        sortBy: 'desc',
+                        descending: false,
+                        page: 1,
+                        rowsPerPage: 10,
+                        rowsNumber: 10
+                    } 
+                })
+            })
+            .catch(e => {
+                console.log(e)
+            })
+            .finally(() => {
+                this.show_confirm_remove = false
+                this.selected_user = {}
+                this.$q.loading.hide()
+
+                this.$q.notify({
+                    message: this.$t('user_removed_successfully'),
+                    type: 'positive',
+                    icon: 'fal fa-user'
+                })
             })
         }
     },
