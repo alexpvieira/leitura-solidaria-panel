@@ -28,7 +28,7 @@
             </div>
 
             <div class="col-12">
-                <span class="text-body1 text-grey-7">{{ $t('article') }}</span>
+                <span class="text-body2 text-grey-7">{{ $t('article') }}</span>
                 <vue-simplemde v-model="article.full_article" :configs="configs" />
             </div>
 

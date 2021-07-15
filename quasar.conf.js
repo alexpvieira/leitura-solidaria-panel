@@ -21,6 +21,7 @@ module.exports = function (/* ctx */) {
 			'axios',
 			'i18n',
 			'fontawesome-pro',
+			'image-base64',
 			'jwt-decode',
 			'qs',
 			'validate-cnpj',

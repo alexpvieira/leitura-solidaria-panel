@@ -20,6 +20,19 @@
                     <div class="col-12">
                         <q-input outlined dense hide-bottom-space bg-color="white" v-model="ngo.cnpj" :label="$t('cnpj')" :error="$v.ngo.cnpj.$error" @input="$v.ngo.cnpj.$touch" />
                     </div>
+
+                    <div class="col-12">
+                        <q-file outlined dense clearable bg-color="white" v-model="ngo.logo" :label="$t('ngo_logo')" accept=".jpg, image/*" max-file-size="1048576" @rejected="rejectFile" @input="pickedFile">
+                            <template v-slot:prepend>
+                                <q-icon name="fal fa-image" />
+                            </template>
+                        </q-file>
+                    </div>
+
+                    <div class="col-12">
+                        <span class="text-body2 text-grey-7">{{ $t('ngo_description') }}</span>
+                        <vue-simplemde v-model="ngo.description" :configs="configs" />
+                    </div>
                 </div>
             </div>
 
@@ -89,6 +102,10 @@
                                 <q-input outlined dense hide-bottom-space bg-color="white" v-model="address.complement" :label="$t('complement')" />
                             </div>
 
+                            <div class="col-12">
+                                <q-input outlined dense hide-bottom-space bg-color="white" v-model="address.district" :label="$t('district')" :error="$v.ngo.addresses.$each[index].district.$error" @input="$v.ngo.addresses.$each[index].district.$touch" />
+                            </div>
+
                             <div class="col-xs-12 col-sm-6">
                                 <q-input outlined dense hide-bottom-space bg-color="white" v-model="address.state" :label="$t('state')" :error="$v.ngo.addresses.$each[index].state.$error" @input="$v.ngo.addresses.$each[index].state.$touch" />
                             </div>
@@ -122,12 +139,23 @@
 
 <script>
 import { required, requiredIf, email } from 'vuelidate/lib/validators'
+import VueSimplemde from 'vue-simplemde'
 
 export default {
     name: 'PageNgo',
 
+    components: {
+        VueSimplemde
+    },
+
     data() {
         return {
+            configs: {
+                hideIcons: ['guide', 'fullscreen', 'side-by-side'],
+                promptURLs: true,
+                spellChecker: false,
+                status: false
+            },
             ngo: {
                 addresses: [{
                     city: null,
@@ -139,8 +167,11 @@ export default {
                     zip_code: ''
                 }],
                 cnpj: '',
+                description: '',
                 email: '',
                 id: 0,
+                logo: null,
+                image: null,
                 name: '',
                 phones: [{
                     number: ''
@@ -161,16 +192,24 @@ export default {
                 this.ngo.name = d.name
                 this.ngo.email = d.mail
                 this.ngo.cnpj = d.num_cnpj
-                this.ngo.phones = d.phones.map(e => ({ number: e} ))
-                this.ngo.addresses = d.address.map(e => ({ ...e, 
-                    city: e.city,
-                    complement: e.complement,
-                    district: e.district,
-                    number: e.number,
-                    state: e.state,
-                    street: e.street,
-                    zip_code: e.zip_code
-                }))
+                this.ngo.image = d.image
+                this.ngo.description = d.description
+                
+                if (d.phones.length > 0) {
+                    this.ngo.phones = d.phones.map(e => ({ number: e} ))
+                }
+
+                if (d.address.length > 0) {
+                    this.ngo.addresses = d.address.map(e => ({ ...e, 
+                        city: e.city,
+                        complement: e.complement,
+                        district: e.district,
+                        number: e.number,
+                        state: e.state,
+                        street: e.street,
+                        zip_code: e.zip_code
+                    }))
+                }
             })
             .catch(e => {
                 console.log(e)
@@ -184,15 +223,20 @@ export default {
             this.$v.$touch()
 
             if (!this.$v.$error) {
+                this.$q.loading.show()
+
                 let data = {
+                    cod_partner: this.ngo_id,
                     name: this.ngo.name,
                     mail: this.ngo.email,
+                    image: this.ngo.image,
+                    description: this.ngo.description,
                     num_cnpj: this.ngo.cnpj,
                     address: this.ngo.addresses.map(e => ({...e})),
                     phones: this.ngo.phones.map(e => e.number)
                 }
 
-                if (this.partner_id === 0) {
+                if (this.ngo_id === 0) {
                     this.$axios.post(`/v1/ongs`, data)
                     .then(response => {
                         this.$q.notify({
@@ -219,7 +263,7 @@ export default {
                     })
                 }
                 else {
-                    this.$axios.put(`/v1/partner/${this.partner_id}`, data)
+                    this.$axios.put(`/v1/ongs/${this.ngo_id}`, data)
                     .then(response => {
                         this.$q.notify({
                             message: this.$t('ngo_updated_successfully'),
@@ -271,6 +315,18 @@ export default {
 
         removeAddress(index) {
             this.ngo.addresses.splice(index, 1)
+        },
+
+        async pickedFile(value) {
+            this.ngo.image = await this.$imageBase64(value)
+        },
+
+        rejectFile() {
+            this.$q.notify({
+                type: 'negative',
+                icon: 'fal fa-ban',
+                message: this.$t('invalid_file_size_or_type')
+            })
         }
     },
 
@@ -311,6 +367,6 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="stylus" scoped>
+@import '~simplemde/dist/simplemde.min.css'
 </style>

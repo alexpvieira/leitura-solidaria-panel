@@ -23,6 +23,7 @@ export default {
     confirm_to_remove_the_partner: "Confirma remover o parceiro",
     confirm_to_remove_the_user: "Confirma remover o usuário",
     created_by_the_b_group_for_the_software_engeneering_mba: "Criado pelo Grupo B para o MBA em Engenharia de Software",
+    district: "Bairro",
     edit: "Editar",
     email: "Email",
     error_creating_ngo: "Erro ao criar ONG",
@@ -42,6 +43,8 @@ export default {
     new_user: "Novo usuário",
     ngo: "ONG",
     ngo_created_successfully: "ONG criada com sucesso",
+    ngo_description: "Descrição da ONG",
+    ngo_logo: "Logo da ONG",
     ngo_removed_successfully: "ONG removida com sucesso",
     ngo_updated_successfully: "ONG atualizada com sucesso",
     ngos: "ONGs",
@@ -82,5 +85,6 @@ export default {
     user_updated_successfully: "Usuário atualizado com sucesso",
     users: "Usuários",
     users_active: "Usuários ativos",
-    zip_code: "CEP"
+    zip_code: "CEP",
+    invalid_file_size_or_type: "Tamanho ou tipo de arquivo inválido"
 }

@@ -89,6 +89,10 @@
                                 <q-input outlined dense hide-bottom-space bg-color="white" v-model="address.complement" :label="$t('complement')" />
                             </div>
 
+                            <div class="col-12">
+                                <q-input outlined dense hide-bottom-space bg-color="white" v-model="address.district" :label="$t('district')" :error="$v.partner.addresses.$each[index].district.$error" @input="$v.partner.addresses.$each[index].district.$touch" />
+                            </div>
+
                             <div class="col-xs-12 col-sm-6">
                                 <q-input outlined dense hide-bottom-space bg-color="white" v-model="address.state" :label="$t('state')" :error="$v.partner.addresses.$each[index].state.$error" @input="$v.partner.addresses.$each[index].state.$touch" />
                             </div>
@@ -161,16 +165,22 @@ export default {
                 this.partner.name = d.name
                 this.partner.email = d.mail
                 this.partner.cnpj = d.num_cnpj
-                this.partner.phones = d.phones.map(e => ({ number: e} ))
-                this.partner.addresses = d.address.map(e => ({ ...e, 
-                    city: e.city,
-                    complement: e.complement,
-                    district: e.district,
-                    number: e.number,
-                    state: e.state,
-                    street: e.street,
-                    zip_code: e.zip_code
-                }))
+                
+                if (d.phones.length > 0) {
+                    this.ngo.phones = d.phones.map(e => ({ number: e} ))
+                }
+
+                if (d.address.length > 0) {
+                    this.ngo.addresses = d.address.map(e => ({ ...e, 
+                        city: e.city,
+                        complement: e.complement,
+                        district: e.district,
+                        number: e.number,
+                        state: e.state,
+                        street: e.street,
+                        zip_code: e.zip_code
+                    }))
+                }
             })
             .catch(e => {
                 console.log(e)
@@ -184,6 +194,8 @@ export default {
             this.$v.$touch()
 
             if (!this.$v.$error) {
+                this.$q.loading.show()
+
                 let data = {
                     name: this.partner.name,
                     mail: this.partner.email,

@@ -23,6 +23,7 @@ export default {
     confirm_to_remove_the_partner: "Confirm to remove the partner",
     confirm_to_remove_the_user: "Confirm to remove the user",
     created_by_the_b_group_for_the_software_engeneering_mba: "Created by the B Group for the Software Engeneering MBA",
+    district: "District",
     edit: "Edit",
     email: "Email",
     error_creating_ngo: "Error creating NGO",
@@ -42,6 +43,8 @@ export default {
     new_user: "New user",
     ngo: "NGO",
     ngo_created_successfully: "NGO created successfully",
+    ngo_description: "NGO Description",
+    ngo_logo: "NGO Logo",
     ngo_removed_successfully: "NGO removed successfully",
     ngo_updated_successfully: "NGO updated successfully",
     ngos: "NGOs",
@@ -82,5 +85,6 @@ export default {
     user_updated_successfully: "User updated successfully",
     users: "Users",
     users_active: "Users active",
-    zip_code: "Zip code"
+    zip_code: "Zip code",
+    invalid_file_size_or_type: "Invalid file size or type"
 }
