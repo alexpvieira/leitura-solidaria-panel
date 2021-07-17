@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <q-table :title="$t('users')" :data="users" :columns="columns" :pagination.sync="pagination" :loading="loading" @request="getUsers" row-key="id" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
+        <q-table :title="$t('users')" :data="users" :columns="columns" :pagination.sync="pagination" :loading="loading" @request="getUsers" row-key="cod_user" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
             <template v-slot:top-right>
                 <q-btn no-caps dense color="primary" :label="$t('new_user')" @click="$router.push({ name: 'user', params: { id: 0 } })" />
             </template>
@@ -95,8 +95,6 @@
 </template>
 
 <script>
-import profiles_list from '../json/profiles.json'
-
 export default {
     name: 'PageUsers',
 
@@ -104,9 +102,9 @@ export default {
         return {
             columns: [{
                 align: 'left',
-                field: 'id',
+                field: 'cod_user',
                 label: '',
-                name: 'id',
+                name: 'cod_user',
                 sortable: false
             }, {
                 align: 'left',

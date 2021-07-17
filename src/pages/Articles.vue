@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <q-table :title="$t('articles')" :data="articles" :columns="columns" :pagination="pagination" row-key="id" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
+        <q-table :title="$t('articles')" :data="articles" :columns="columns" :pagination.sync="pagination" :loading="loading" @request="getArticles" row-key="cod_article" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
             <template v-slot:top-right>
                 <q-btn no-caps dense color="primary" :label="$t('new_article')" @click="$router.push({ name: 'article', params: { id: 0 } })" />
             </template>
@@ -21,7 +21,7 @@
 
             <template v-slot:body-cell-partner="props">
                 <q-td :props="props">
-                    {{ props.value.label }}
+                    {{ props.value.name }}
                 </q-td>
             </template>
 
@@ -50,14 +50,14 @@
             <template v-slot:item="props">
                 <q-card class="full-width q-mb-md q-pt-md">
                     <q-list dense>
-                        <q-item v-for="col in props.cols.filter(col => col.name !== 'actions' && col.name !== 'id')" :key="col.name">
+                        <q-item v-for="col in props.cols.filter(col => col.name !== 'actions' && col.name !== 'cod_article')" :key="col.name">
                             <q-item-section>
                                 <q-item-label>{{ $t(col.label) }}</q-item-label>
                             </q-item-section>
 
                             <q-item-section side>
                                 <q-item-label caption v-if="col.name === 'partner'">
-                                    {{ col.value.label }}
+                                    {{ col.value.name }}
                                 </q-item-label>
 
                                 <q-item-label caption v-else-if="col.name === 'publication_date'">
@@ -107,8 +107,6 @@
 </template>
 
 <script>
-import articles_list from '../json/articles.json'
-
 export default {
     name: 'PageArticles',
 
@@ -116,9 +114,9 @@ export default {
         return {
             columns: [{
                 align: 'left',
-                field: 'id',
+                field: 'cod_article',
                 label: '',
-                name: 'id',
+                name: 'cod_article',
                 sortable: false
             }, {
                 align: 'left',
@@ -157,7 +155,7 @@ export default {
                 name: 'actions',
                 sortable: false
             }],
-            articles: articles_list,
+            articles: [],
             pagination: {
                 descending: false,
                 page: 1,
@@ -165,26 +163,76 @@ export default {
                 sortBy: 'desc'
             },
             selected_article: {},
-            show_confirm_remove: false
+            show_confirm_remove: false,
+            loading: false
         }
     },
 
     methods: {
+        getArticles({ pagination }) {
+            this.loading = true
+            this.pagination = pagination
+
+            let order = pagination.descending ? '-' : ''
+            let order_by = pagination.sortBy ? order + pagination.sortBy : ''
+
+            let data = {
+                'linesPerPage': this.pagination.rowsPerPage,
+                'page': this.pagination.page,
+                'ordering': order_by
+            }
+
+            this.$axios.get(`/v1/article/page?${this.$qs.stringify(data)}`)
+            .then(response => {
+                this.pagination.rowsNumber = response.data.total_elements
+                this.articles = response.data.results.map(e => ({...e, actions: e.cod_article}))
+            })
+            .catch(e => {
+                console.log(e)
+            })
+            .finally(() => {
+                this.loading = false
+            })
+        },
+
         confirmRemove(value) {
-            this.selected_article = this.articles.find(e => e.id === value)
+            this.selected_article = this.articles.find(e => e.cod_article === value)
             this.show_confirm_remove = true
         },
 
         articleRemovedConfirmation() {
-            this.show_confirm_remove = false
-            this.selected_user = {}
+            this.$q.loading.show()
 
-            this.$q.notify({
-                message: this.$t('article_removed_successfully'),
-                type: 'positive',
-                icon: 'fal fa-newspaper'
+            this.$axios.delete(`/v1/article/${this.selected_article.cod_article}`)
+            .then(response => {
+                this.getArticles({ pagination: {
+                        sortBy: 'desc',
+                        descending: false,
+                        page: 1,
+                        rowsPerPage: 10,
+                        rowsNumber: 10
+                    } 
+                })
+            })
+            .catch(e => {
+                console.log(e)
+            })
+            .finally(() => {
+                this.show_confirm_remove = false
+                this.selected_article = {}
+                this.$q.loading.hide()
+
+                this.$q.notify({
+                    message: this.$t('article_removed_successfully'),
+                    type: 'positive',
+                    icon: 'fal fa-newspaper'
+                })
             })
         }
+    },
+
+    created() {
+        this.getArticles({ pagination: this.pagination })
     }
 }
 </script>

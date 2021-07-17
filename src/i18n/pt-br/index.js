@@ -86,5 +86,7 @@ export default {
     users: "Usuários",
     users_active: "Usuários ativos",
     zip_code: "CEP",
-    invalid_file_size_or_type: "Tamanho ou tipo de arquivo inválido"
+    invalid_file_size_or_type: "Tamanho ou tipo de arquivo inválido",
+    a_new_password_has_been_sent_to_your_email: "Uma nova senha foi enviada ao seu email",
+    email_not_found: "Email não encontrado"
 }

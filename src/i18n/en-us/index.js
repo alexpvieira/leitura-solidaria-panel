@@ -86,5 +86,7 @@ export default {
     users: "Users",
     users_active: "Users active",
     zip_code: "Zip code",
-    invalid_file_size_or_type: "Invalid file size or type"
+    invalid_file_size_or_type: "Invalid file size or type",
+    a_new_password_has_been_sent_to_your_email: "A new password has been sent to your email",
+    email_not_found: "Email not found"
 }

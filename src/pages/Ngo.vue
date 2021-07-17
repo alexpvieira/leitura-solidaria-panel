@@ -226,7 +226,6 @@ export default {
                 this.$q.loading.show()
 
                 let data = {
-                    cod_partner: this.ngo_id,
                     name: this.ngo.name,
                     mail: this.ngo.email,
                     image: this.ngo.image,
@@ -319,6 +318,8 @@ export default {
 
         async pickedFile(value) {
             this.ngo.image = await this.$imageBase64(value)
+            if (!value) this.ngo.image = null
+            else this.ngo.image = await this.$imageBase64(value)
         },
 
         rejectFile() {
