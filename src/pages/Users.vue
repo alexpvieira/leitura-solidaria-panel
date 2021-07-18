@@ -13,7 +13,7 @@
                 </q-tr>
             </template>
 
-            <template v-slot:body-cell-id="props">
+            <template v-slot:body-cell-cod_user="props">
                 <q-td auto-width :props="props">
                     {{ props.value }}
                 </q-td>
@@ -162,7 +162,7 @@ export default {
             this.$axios.get(`/v1/users/page?${this.$qs.stringify(data)}`)
             .then(response => {
                 this.pagination.rowsNumber = response.data.total_elements
-                this.users = response.data.results.map(e => ({...e, actions: e.id}))
+                this.users = response.data.results.map(e => ({...e, actions: e.cod_user}))
             })
             .catch(e => {
                 console.log(e)
@@ -173,14 +173,14 @@ export default {
         },
 
         confirmRemove(value) {
-            this.selected_user = this.users.find(e => e.id === value)
+            this.selected_user = this.users.find(e => e.cod_user === value)
             this.show_confirm_remove = true
         },
 
         userRemovedConfirmation() {
             this.$q.loading.show()
 
-            this.$axios.delete(`/v1/users/${this.selected_user.id}`)
+            this.$axios.delete(`/v1/users/${this.selected_user.cod_user}`)
             .then(response => {
                 this.getUsers({ pagination: {
                         sortBy: 'desc',

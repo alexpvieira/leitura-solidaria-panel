@@ -23,12 +23,16 @@
                 <q-input outlined dense hide-bottom-space bg-color="white" v-model="article.minutes" :label="$t('minutes_of_reading')" :error="$v.article.minutes.$error" @input="$v.article.minutes.$touch" />
             </div>
 
-            <div class="col-12">
+            <div :class="article.image ? 'col-11' : 'col-12'">
                 <q-file outlined dense hide-bottom-space clearable bg-color="white" v-model="article.logo" :label="$t('article_image')" accept=".jpg, image/*" max-file-size="1048576" @rejected="rejectFile" @input="pickedFile" :error="$v.article.image.$error">
                     <template v-slot:prepend>
                         <q-icon name="fal fa-image" />
                     </template>
                 </q-file>
+            </div>
+
+            <div class="col-1" v-if="article.image">
+                <q-btn no-caps color="primary" icon="fal fa-image" class="full-width" @click="show_image = true" />
             </div>
 
             <div class="col-12">
@@ -52,18 +56,24 @@
                 </div>
             </div>
         </q-form>
+
+        <q-dialog v-model="show_image">
+            <image-modal :src="article.image" />
+        </q-dialog>
     </q-page>
 </template>
 
 <script>
 import VueSimplemde from 'vue-simplemde'
+import ImageModal from 'components/ImageModal'
 import { required, minValue } from 'vuelidate/lib/validators'
 
 export default {
     name: 'Pagepartner',
 
     components: {
-        VueSimplemde
+        VueSimplemde,
+        ImageModal
     },
 
     data() {
@@ -85,7 +95,8 @@ export default {
                 spellChecker: false,
                 status: false
             },
-            partners: []
+            partners: [],
+            show_image: false
         }
     },
 
@@ -118,7 +129,7 @@ export default {
                 this.article.title = d.title
                 this.article.image = d.image
                 this.article.article_summary = d.article_summary
-                this.article.full_article = d.full_article
+                this.article.full_article = d.full_article ? d.full_article : ''
                 this.article.partner = {
                     label: d.partner.name,
                     value: d.partner.cod_partner

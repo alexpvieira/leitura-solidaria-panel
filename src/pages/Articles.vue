@@ -13,7 +13,7 @@
                 </q-tr>
             </template>
 
-            <template v-slot:body-cell-id="props">
+            <template v-slot:body-cell-cod_article="props">
                 <q-td auto-width :props="props">
                     {{ props.value }}
                 </q-td>

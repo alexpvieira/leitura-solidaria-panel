@@ -21,17 +21,21 @@
                         <q-input outlined dense hide-bottom-space bg-color="white" v-model="ngo.cnpj" :label="$t('cnpj')" :error="$v.ngo.cnpj.$error" @input="$v.ngo.cnpj.$touch" />
                     </div>
 
-                    <div class="col-12">
-                        <q-file outlined dense clearable bg-color="white" v-model="ngo.logo" :label="$t('ngo_logo')" accept=".jpg, image/*" max-file-size="1048576" @rejected="rejectFile" @input="pickedFile">
+                    <div :class="ngo.image ? 'col-11' : 'col-12'">
+                        <q-file outlined dense clearable bg-color="white" v-model="ngo.logo" :label="$t('ngo_logo')" accept=".jpg, image/*" max-file-size="1048576" @rejected="rejectFile" @input="pickedFile" :error="$v.ngo.image.$error">
                             <template v-slot:prepend>
                                 <q-icon name="fal fa-image" />
                             </template>
                         </q-file>
                     </div>
 
+                    <div class="col-1" v-if="ngo.image">
+                        <q-btn no-caps color="primary" icon="fal fa-image" class="full-width" @click="show_image = true" />
+                    </div>
+
                     <div class="col-12">
                         <span class="text-body2 text-grey-7">{{ $t('ngo_description') }}</span>
-                        <vue-simplemde v-model="ngo.description" :configs="configs" />
+                        <vue-simplemde v-model="ngo.description" :configs="configs" @input="$v.ngo.description.$touch" :class="$v.ngo.description.$error ? 'error' : ''" />
                     </div>
                 </div>
             </div>
@@ -134,18 +138,24 @@
                 </div>
             </div>
         </q-form>
+
+        <q-dialog v-model="show_image">
+            <image-modal :src="ngo.image" />
+        </q-dialog>
     </q-page>
 </template>
 
 <script>
-import { required, requiredIf, email } from 'vuelidate/lib/validators'
 import VueSimplemde from 'vue-simplemde'
+import ImageModal from 'components/ImageModal'
+import { required, requiredIf, email } from 'vuelidate/lib/validators'
 
 export default {
     name: 'PageNgo',
 
     components: {
-        VueSimplemde
+        VueSimplemde,
+        ImageModal
     },
 
     data() {
@@ -170,14 +180,15 @@ export default {
                 description: '',
                 email: '',
                 id: 0,
-                logo: null,
                 image: null,
+                logo: null,
                 name: '',
                 phones: [{
                     number: ''
                 }]
             },
-            ngo_id: null
+            ngo_id: null,
+            show_image: false
         }
     },
 
@@ -193,7 +204,7 @@ export default {
                 this.ngo.email = d.mail
                 this.ngo.cnpj = d.num_cnpj
                 this.ngo.image = d.image
-                this.ngo.description = d.description
+                this.ngo.description = d.description ? d.description : ''
                 
                 if (d.phones.length > 0) {
                     this.ngo.phones = d.phones.map(e => ({ number: e} ))
@@ -317,9 +328,9 @@ export default {
         },
 
         async pickedFile(value) {
-            this.ngo.image = await this.$imageBase64(value)
             if (!value) this.ngo.image = null
             else this.ngo.image = await this.$imageBase64(value)
+            this.$v.ngo.image.$touch
         },
 
         rejectFile() {
@@ -341,6 +352,8 @@ export default {
             ngo: {
                 name: { required },
                 email: { required, email },
+                description: { required },
+                image: { required },
                 cnpj: {
                     required,
                     isValid() {

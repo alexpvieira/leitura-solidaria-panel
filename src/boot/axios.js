@@ -22,4 +22,16 @@ export default async ({ router, store, Vue }) => {
 			return Promise.reject(error)
 		}
 	)
+
+	axios.interceptors.response.use(undefined, err => {
+		const { config, response: { status } } = err
+
+		if (status === 403) {
+			store.dispatch('persist/SET_ACCESS_TOKEN', [''])
+			store.dispatch('persist/SET_USER', [{}])
+			router.replace({ name: 'login' })
+		}
+	
+		return Promise.reject(err)
+	})
 }
