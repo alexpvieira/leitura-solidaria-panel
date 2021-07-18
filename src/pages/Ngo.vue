@@ -21,7 +21,7 @@
                         <q-input outlined dense hide-bottom-space bg-color="white" v-model="ngo.cnpj" :label="$t('cnpj')" :error="$v.ngo.cnpj.$error" @input="$v.ngo.cnpj.$touch" />
                     </div>
 
-                    <div :class="ngo.image ? 'col-11' : 'col-12'">
+                    <div :class="ngo.image ? 'col-xs-10 col-sm-11' : 'col-12'">
                         <q-file outlined dense clearable bg-color="white" v-model="ngo.logo" :label="$t('ngo_logo')" accept=".jpg, image/*" max-file-size="1048576" @rejected="rejectFile" @input="pickedFile" :error="$v.ngo.image.$error">
                             <template v-slot:prepend>
                                 <q-icon name="fal fa-image" />
@@ -29,7 +29,7 @@
                         </q-file>
                     </div>
 
-                    <div class="col-1" v-if="ngo.image">
+                    <div class="col-xs-2 col-sm-1" v-if="ngo.image">
                         <q-btn no-caps color="primary" icon="fal fa-image" class="full-width" @click="show_image = true" />
                     </div>
 

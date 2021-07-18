@@ -44,13 +44,13 @@
             <template v-slot:item="props">
                 <q-card class="full-width q-mb-md q-pt-md">
                     <q-list dense>
-                        <q-item v-for="col in props.cols.filter(col => col.name !== 'actions' && col.name !== 'id')" :key="col.name">
+                        <q-item v-for="col in props.cols.filter(col => col.name !== 'actions' && col.name !== 'cod_user')" :key="col.name">
                             <q-item-section>
                                 <q-item-label>{{ $t(col.label) }}</q-item-label>
                             </q-item-section>
 
-                            <q-item-label caption v-if="col.name === 'profile'">
-                                {{ $t(col.value.label) }}
+                            <q-item-label caption v-if="col.name === 'profiles'">
+                                {{ $t(col.value.type.toLowerCase()) }}
                             </q-item-label>
 
                             <q-item-section side v-else>

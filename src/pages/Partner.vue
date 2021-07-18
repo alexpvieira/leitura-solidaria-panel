@@ -167,11 +167,11 @@ export default {
                 this.partner.cnpj = d.num_cnpj
                 
                 if (d.phones.length > 0) {
-                    this.ngo.phones = d.phones.map(e => ({ number: e} ))
+                    this.partner.phones = d.phones.map(e => ({ number: e} ))
                 }
 
                 if (d.address.length > 0) {
-                    this.ngo.addresses = d.address.map(e => ({ ...e, 
+                    this.partner.addresses = d.address.map(e => ({ ...e, 
                         city: e.city,
                         complement: e.complement,
                         district: e.district,

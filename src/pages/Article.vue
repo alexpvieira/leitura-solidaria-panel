@@ -23,7 +23,7 @@
                 <q-input outlined dense hide-bottom-space bg-color="white" v-model="article.minutes" :label="$t('minutes_of_reading')" :error="$v.article.minutes.$error" @input="$v.article.minutes.$touch" />
             </div>
 
-            <div :class="article.image ? 'col-11' : 'col-12'">
+            <div :class="article.image ? 'col-xs-10 col-sm-11' : 'col-12'">
                 <q-file outlined dense hide-bottom-space clearable bg-color="white" v-model="article.logo" :label="$t('article_image')" accept=".jpg, image/*" max-file-size="1048576" @rejected="rejectFile" @input="pickedFile" :error="$v.article.image.$error">
                     <template v-slot:prepend>
                         <q-icon name="fal fa-image" />
@@ -31,7 +31,7 @@
                 </q-file>
             </div>
 
-            <div class="col-1" v-if="article.image">
+            <div class="col-xs-2 col-sm-1" v-if="article.image">
                 <q-btn no-caps color="primary" icon="fal fa-image" class="full-width" @click="show_image = true" />
             </div>
 
