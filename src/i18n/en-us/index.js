@@ -1,4 +1,5 @@
 export default {
+    a_new_password_has_been_sent_to_your_email: "A new password has been sent to your email",
     add_address: "Add address",
     add_phone_number: "Add phone number",
     addresses: "Addresses",
@@ -17,6 +18,7 @@ export default {
     city: "City",
     client: "Client",
     cnpj: "CNPJ",
+    cnpj_already_used: "CNPJ already used",
     complement: "Complement",
     confirm_to_remove_the_article: "Confirm to remove the article",
     confirm_to_remove_the_ngo: "Confirm to remove the user",
@@ -26,6 +28,8 @@ export default {
     district: "District",
     edit: "Edit",
     email: "Email",
+    email_already_used: "Email already used",
+    email_not_found: "Email not found",
     error_creating_ngo: "Error creating NGO",
     error_creating_partner: "Error creating partner",
     error_creating_user: "Error creating user",
@@ -34,6 +38,7 @@ export default {
     error_updating_user: "Error updating user",
     home: "Home",
     invalid_email_or_password: "Invalid email or password",
+    invalid_file_size_or_type: "Invalid file size or type",
     minutes_of_reading: "Minutes of reading",
     money_raised: "Money raised",
     name: "Name",
@@ -85,8 +90,5 @@ export default {
     user_updated_successfully: "User updated successfully",
     users: "Users",
     users_active: "Users active",
-    zip_code: "Zip code",
-    invalid_file_size_or_type: "Invalid file size or type",
-    a_new_password_has_been_sent_to_your_email: "A new password has been sent to your email",
-    email_not_found: "Email not found"
+    zip_code: "Zip code"
 }

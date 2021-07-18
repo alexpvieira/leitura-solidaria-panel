@@ -14,11 +14,23 @@
                     </div>
 
                     <div class="col-12">
-                        <q-input outlined dense hide-bottom-space bg-color="white" v-model="partner.email" :label="$t('email')" type="email" :error="$v.partner.email.$error" @input="$v.partner.email.$touch" />
+                        <q-input outlined dense hide-bottom-space bg-color="white" v-model="partner.email" :label="$t('email')" type="email" :error="$v.partner.email.$error" @input="$v.partner.email.$touch" @blur="checkEmail()">
+                            <template v-slot:error>
+                                <span slot="error-label" v-if="email_in_use">
+                                    {{ $t('email_already_used') }}
+                                </span>
+                            </template>
+                        </q-input>
                     </div>
 
                     <div class="col-12">
-                        <q-input outlined dense hide-bottom-space bg-color="white" v-model="partner.cnpj" :label="$t('cnpj')" :error="$v.partner.cnpj.$error" @input="$v.partner.cnpj.$touch" />
+                        <q-input outlined dense hide-bottom-space bg-color="white" v-model="partner.cnpj" :label="$t('cnpj')" :error="$v.partner.cnpj.$error" @input="$v.partner.cnpj.$touch" @blur="checkCnpj()">
+                            <template v-slot:error>
+                                <span slot="error-label" v-if="cnpj_in_use">
+                                    {{ $t('cnpj_already_used') }}
+                                </span>
+                            </template>
+                        </q-input>
                     </div>
                 </div>
             </div>
@@ -132,6 +144,8 @@ export default {
 
     data() {
         return {
+            email_in_use: null,
+            cnpj_in_use: null,
             partner: {
                 addresses: [{
                     city: null,
@@ -283,6 +297,42 @@ export default {
 
         removeAddress(index) {
             this.partner.addresses.splice(index, 1)
+        },
+
+        checkEmail() {
+            if (this.partner.email) {
+                let data = {
+                    cod_partner: this.partner_id,
+                    mail: this.partner.email
+                }
+
+                this.$axios.post(`/v1/partner/check_mail`, data)
+                .then(response => {
+                    this.email_in_use = response.data.in_use
+                })
+                .catch(e => {
+                    console.log(e)
+                })
+            }
+            else this.email_in_use = null
+        },
+
+        checkCnpj() {
+            if (this.partner.cnpj) {
+                let data = {
+                    cod_partner: this.partner_id,
+                    num_cnpj: this.partner.cnpj
+                }
+
+                this.$axios.post(`/v1/partner/check_cnpj`, data)
+                .then(response => {
+                    this.cnpj_in_use = response.data.in_use
+                })
+                .catch(e => {
+                    console.log(e)
+                })
+            }
+            else this.cnpj_in_use = null
         }
     },
 
@@ -295,11 +345,20 @@ export default {
         return {
             partner: {
                 name: { required },
-                email: { required, email },
+                email: { required, email, 
+                    emailUnique() {
+                        if (!this.email_in_use) return true
+                        else return false
+                    }
+                },
                 cnpj: {
                     required,
                     isValid() {
                         return this.$validateCnpj(this.partner.cnpj)
+                    },
+                    cnpjUnique() {
+                        if (!this.cnpj_in_use) return true
+                        else return false
                     }
                 },
                 phones: {

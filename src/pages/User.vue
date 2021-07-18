@@ -12,7 +12,13 @@
             </div>
 
             <div class="col-12">
-                <q-input outlined dense hide-bottom-space bg-color="white" v-model="user.email" :label="$t('email')" type="email" :error="$v.user.email.$error" @input="$v.user.email.$touch" />
+                <q-input outlined dense hide-bottom-space bg-color="white" v-model="user.email" :label="$t('email')" type="email" :error="$v.user.email.$error" @input="$v.user.email.$touch" @blur="checkEmail()">
+                    <template v-slot:error>
+                        <span slot="error-label" v-if="email_in_use">
+                            {{ $t('email_already_used') }}
+                        </span>
+                    </template>
+                </q-input>
             </div>
 
             <div class="col-12">
@@ -58,6 +64,7 @@ export default {
 
     data() {
         return {
+            email_in_use: null,
             ngos: [],
             partners: [],
             profiles: [],
@@ -205,6 +212,24 @@ export default {
                     })
                 }
             }
+        },
+
+        checkEmail() {
+            if (this.user.email) {
+                let data = {
+                    cod_user: this.user_id,
+                    mail: this.user.email
+                }
+
+                this.$axios.post(`/v1/users/check_mail`, data)
+                .then(response => {
+                    this.email_in_use = response.data.in_use
+                })
+                .catch(e => {
+                    console.log(e)
+                })
+            }
+            else this.email_in_use = null
         }
     },
 
@@ -217,7 +242,12 @@ export default {
         return {
             user: {
                 name: { required },
-                email: { required, email },
+                email: { required, email, 
+                    emailUnique() {
+                        if (!this.email_in_use) return true
+                        else return false
+                    }
+                },
                 profile: { required },
                 ngo: {
                     requiredIf: requiredIf(() => {

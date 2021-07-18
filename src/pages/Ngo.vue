@@ -14,11 +14,23 @@
                     </div>
 
                     <div class="col-12">
-                        <q-input outlined dense hide-bottom-space bg-color="white" v-model="ngo.email" :label="$t('email')" type="email" :error="$v.ngo.email.$error" @input="$v.ngo.email.$touch" />
+                        <q-input outlined dense hide-bottom-space bg-color="white" v-model="ngo.email" :label="$t('email')" type="email" :error="$v.ngo.email.$error" @input="$v.ngo.email.$touch" @blur="checkEmail()">
+                            <template v-slot:error>
+                                <span slot="error-label" v-if="email_in_use">
+                                    {{ $t('email_already_used') }}
+                                </span>
+                            </template>
+                        </q-input>
                     </div>
 
                     <div class="col-12">
-                        <q-input outlined dense hide-bottom-space bg-color="white" v-model="ngo.cnpj" :label="$t('cnpj')" :error="$v.ngo.cnpj.$error" @input="$v.ngo.cnpj.$touch" />
+                        <q-input outlined dense hide-bottom-space bg-color="white" v-model="ngo.cnpj" :label="$t('cnpj')" :error="$v.ngo.cnpj.$error" @input="$v.ngo.cnpj.$touch" @blur="checkCnpj()">
+                            <template v-slot:error>
+                                <span slot="error-label" v-if="cnpj_in_use">
+                                    {{ $t('cnpj_already_used') }}
+                                </span>
+                            </template>
+                        </q-input>
                     </div>
 
                     <div :class="ngo.image ? 'col-xs-10 col-sm-11' : 'col-12'">
@@ -160,12 +172,14 @@ export default {
 
     data() {
         return {
+            cnpj_in_use: null,
             configs: {
                 hideIcons: ['guide', 'fullscreen', 'side-by-side'],
                 promptURLs: true,
                 spellChecker: false,
                 status: false
             },
+            email_in_use: null,
             ngo: {
                 addresses: [{
                     city: null,
@@ -339,6 +353,42 @@ export default {
                 icon: 'fal fa-ban',
                 message: this.$t('invalid_file_size_or_type')
             })
+        },
+
+        checkEmail() {
+            if (this.ngo.email) {
+                let data = {
+                    cod_ong: this.ngo_id,
+                    mail: this.ngo.email
+                }
+
+                this.$axios.post(`/v1/ongs/check_mail`, data)
+                .then(response => {
+                    this.email_in_use = response.data.in_use
+                })
+                .catch(e => {
+                    console.log(e)
+                })
+            }
+            else this.email_in_use = null
+        },
+
+        checkCnpj() {
+            if (this.ngo.cnpj) {
+                let data = {
+                    cod_ong: this.ngo_id,
+                    num_cnpj: this.ngo.cnpj
+                }
+
+                this.$axios.post(`/v1/ongs/check_cnpj`, data)
+                .then(response => {
+                    this.cnpj_in_use = response.data.in_use
+                })
+                .catch(e => {
+                    console.log(e)
+                })
+            }
+            else this.cnpj_in_use = null
         }
     },
 
@@ -351,13 +401,22 @@ export default {
         return {
             ngo: {
                 name: { required },
-                email: { required, email },
+                email: { required, email, 
+                    emailUnique() {
+                        if (!this.email_in_use) return true
+                        else return false
+                    }
+                },
                 description: { required },
                 image: { required },
                 cnpj: {
                     required,
                     isValid() {
                         return this.$validateCnpj(this.ngo.cnpj)
+                    },
+                    cnpjUnique() {
+                        if (!this.cnpj_in_use) return true
+                        else return false
                     }
                 },
                 phones: {
