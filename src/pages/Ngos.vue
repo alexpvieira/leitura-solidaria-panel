@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-md">
-        <q-table :title="$t('ngos')" :data="ngos" :columns="columns" :pagination.sync="pagination" :loading="loading" @request="getNgos" row-key="cod_partner" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
+        <q-table :title="$t('ngos')" :data="ngos" :columns="columns" :pagination.sync="pagination" :loading="loading" @request="getNgos" row-key="cod_ong" :grid="$q.platform.is.mobile" :rows-per-page-options="[5, 10]">
             <template v-slot:top-right>
                 <q-btn no-caps dense color="primary" :label="$t('new_ngo')" @click="$router.push({ name: 'ngo', params: { id: 0 } })" />
             </template>
@@ -13,7 +13,7 @@
                 </q-tr>
             </template>
 
-            <template v-slot:body-cell-cod_partner="props">
+            <template v-slot:body-cell-cod_ong="props">
                 <q-td auto-width :props="props">
                     {{ props.value }}
                 </q-td>
@@ -38,7 +38,7 @@
             <template v-slot:item="props">
                 <q-card class="full-width q-mb-md q-pt-md">
                     <q-list dense>
-                        <q-item v-for="col in props.cols.filter(col => col.name !== 'actions' && col.name !== 'cod_partner')" :key="col.name">
+                        <q-item v-for="col in props.cols.filter(col => col.name !== 'actions' && col.name !== 'cod_ong')" :key="col.name">
                             <q-item-section>
                                 <q-item-label>{{ $t(col.label) }}</q-item-label>
                             </q-item-section>
@@ -92,9 +92,9 @@ export default {
         return {
             columns: [{
                 align: 'left',
-                field: 'cod_partner',
+                field: 'cod_ong',
                 label: '',
-                name: 'cod_partner',
+                name: 'cod_ong',
                 sortable: false
             }, {
                 align: 'left',
@@ -146,7 +146,7 @@ export default {
             this.$axios.get(`/v1/ongs/page?${this.$qs.stringify(data)}`)
             .then(response => {
                 this.pagination.rowsNumber = response.data.total_elements
-                this.ngos = response.data.results.map(e => ({...e, actions: e.cod_partner}))
+                this.ngos = response.data.results.map(e => ({...e, actions: e.cod_ong}))
             })
             .catch(e => {
                 console.log(e)
@@ -157,14 +157,14 @@ export default {
         },
 
         confirmRemove(value) {
-            this.selected_ngo = this.ngos.find(e => e.cod_partner === value)
+            this.selected_ngo = this.ngos.find(e => e.cod_ong === value)
             this.show_confirm_remove = true
         },
 
         ngoRemovedConfirmation() {
             this.$q.loading.show()
 
-            this.$axios.delete(`/v1/ongs/${this.selected_ngo.cod_partner}`)
+            this.$axios.delete(`/v1/ongs/${this.selected_ngo.cod_ong}`)
             .then(response => {
                 this.getNgos({ pagination: {
                         sortBy: 'desc',
