@@ -160,7 +160,7 @@
 <script>
 import VueSimplemde from 'vue-simplemde'
 import ImageModal from 'components/ImageModal'
-import { required, requiredIf, email } from 'vuelidate/lib/validators'
+import { required, email } from 'vuelidate/lib/validators'
 
 export default {
     name: 'PageNgo',
