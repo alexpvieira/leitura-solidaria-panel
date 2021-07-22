@@ -33,6 +33,7 @@ export default {
     error_creating_ngo: "Error creating NGO",
     error_creating_partner: "Error creating partner",
     error_creating_user: "Error creating user",
+    error_updating_article: "Error updating article",
     error_updating_ngo: "Error updating NGO",
     error_updating_partner: "Error updating partner",
     error_updating_user: "Error updating user",
