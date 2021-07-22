@@ -36,7 +36,7 @@
             </div>
 
             <div class="col-12">
-                <q-input outlined dense hide-bottom-space counter autogrow type="textarea" maxlength="300" bg-color="white" v-model="article.article_summary" :label="$t('article_summary')" :error="$v.article.article_summary.$error" @input="$v.article.article_summary.$touch" />
+                <q-input outlined dense hide-bottom-space counter autogrow type="textarea" maxlength="150" bg-color="white" v-model="article.article_summary" :label="$t('article_summary')" :error="$v.article.article_summary.$error" @input="$v.article.article_summary.$touch" />
             </div>
 
             <div class="col-12">
