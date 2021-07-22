@@ -111,19 +111,19 @@ export default {
                 field: 'name',
                 label: 'name',
                 name: 'name',
-                sortable: true
+                sortable: false
             }, {
                 align: 'left',
                 field: 'mail',
                 label: 'email',
                 name: 'mail',
-                sortable: true
+                sortable: false
             }, {
                 align: 'left',
                 field: 'profiles',
                 label: 'profile',
                 name: 'profiles',
-                sortable: true
+                sortable: false
             }, {
                 align: 'left',
                 field: 'actions',

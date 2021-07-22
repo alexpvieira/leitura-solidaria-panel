@@ -123,25 +123,25 @@ export default {
                 field: 'title',
                 label: 'title',
                 name: 'title',
-                sortable: true
+                sortable: false
             }, {
                 align: 'left',
                 field: 'partner',
                 label: 'partner',
                 name: 'partner',
-                sortable: true
+                sortable: false
             }, {
                 align: 'left',
                 field: 'points',
                 label: 'points',
                 name: 'points',
-                sortable: true
+                sortable: false
             }, {
                 align: 'left',
                 field: 'readings',
                 label: 'readings',
                 name: 'readings',
-                sortable: true
+                sortable: false
             }, {
                 align: 'left',
                 field: 'publication_date',
