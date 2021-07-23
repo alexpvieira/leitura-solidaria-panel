@@ -5,6 +5,7 @@ import SecureLS from 'secure-ls'
 
 // Modules
 import common from './modules/common'
+import dashboard from './modules/dashboard'
 import persist from './modules/persist'
 
 const ls = new SecureLS({ isCompression: false })
@@ -23,6 +24,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     modules: {
         common,
+        dashboard,
         persist
     },
     plugins: [dataState]
