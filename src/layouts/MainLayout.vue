@@ -2,7 +2,7 @@
 	<q-layout view="hHr lpr fFr">
 		<q-header elevated>
 			<q-toolbar>
-				<q-btn flat dense round icon="fal fa-chevron-left" @click="$router.replace({ name: 'home' })" :disable="$route.name === 'home'" />
+				<q-btn flat dense round icon="fal fa-chevron-left" :color="$route.name === 'home' ? 'primary' : 'white'" :class="$route.name === 'home' ? 'no-pointer-events' : ''" @click="$router.replace({ name: 'home' })" :disable="$route.name === 'home'" />
 
 				<q-toolbar-title class="text-center">
 					{{ $t('solidary_reading') }}
